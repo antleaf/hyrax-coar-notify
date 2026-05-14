@@ -104,8 +104,6 @@ GEM
     almond-rails (0.3.0)
       rails (>= 4.2)
     ast (2.4.3)
-    autoprefixer-rails (10.4.21.0)
-      execjs (~> 2)
     awesome_nested_set (3.9.0)
       activerecord (>= 4.0.0, < 8.2)
     aws-eventstream (1.4.0)
@@ -157,9 +155,8 @@ GEM
       rails (>= 6.1, < 9)
     bootsnap (1.24.4)
       msgpack (~> 1.2)
-    bootstrap (4.6.2.1)
-      autoprefixer-rails (>= 9.1.0)
-      popper_js (>= 1.16.1, < 2)
+    bootstrap (5.3.8)
+      popper_js (>= 2.11.8, < 3)
     brakeman (8.0.4)
       racc
     breadcrumbs_on_rails (3.0.1)
@@ -740,7 +737,7 @@ GEM
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
-    popper_js (1.16.1)
+    popper_js (2.11.8)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -1159,7 +1156,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  bootstrap (~> 4.0)
+  bootstrap (~> 5.3)
   brakeman
   capybara
   debug
