@@ -76,5 +76,5 @@ gem "openseadragon", ">= 0.2.0"
 gem "riiif", "~> 2.1"
 
 group :development, :test do
-  gem "dotenv-rails", "~> 2.8"
+  gem "dotenv-rails", "~> 3.2"
 end
