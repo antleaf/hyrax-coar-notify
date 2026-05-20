@@ -160,6 +160,9 @@ GEM
     bootstrap (4.6.2.1)
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.16.1, < 2)
+    bootstrap_form (5.6.1)
+      actionpack (>= 7.2)
+      activemodel (>= 7.2)
     brakeman (8.0.4)
       racc
     breadcrumbs_on_rails (3.0.1)
@@ -465,6 +468,13 @@ GEM
       active-fedora (>= 10)
       mime-types (>= 1)
       rdf-vocab
+    hydra-role-management (1.2.0)
+      blacklight (< 8)
+      bootstrap_form
+      bundler (>= 1.5)
+      cancancan
+      json (>= 1.8)
+      psych (~> 3.0)
     hydra-works (2.3.0)
       activesupport (>= 5.2, < 9.0)
       hydra-derivatives (>= 3.6)
@@ -1167,6 +1177,7 @@ DEPENDENCIES
   devise-guests (~> 0.8)
   dotenv-rails (~> 2.8)
   fcrepo_wrapper
+  hydra-role-management
   hyrax (= 5.2.0)
   importmap-rails
   jbuilder

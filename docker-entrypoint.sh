@@ -48,7 +48,7 @@ if [ ${solr_running} -eq 0 ] ; then
 fi
 
 echo "Setting up hyrax... (this can take a few minutes)"
-# bundle exec rake rdms:setup_hyrax["seed/setup.json"]
+bundle exec rake notify:setup_hyrax["seed/setup.json"]
 
 # echo "--------- Starting Hyrax in ${RAILS_ENV} mode ---------"
 rm -f /tmp/hyrax.pid

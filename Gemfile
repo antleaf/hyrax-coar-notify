@@ -78,3 +78,6 @@ gem "riiif", "~> 2.1"
 group :development, :test do
   gem "dotenv-rails", "~> 2.8"
 end
+
+# role management gem
+gem 'hydra-role-management'
