@@ -1,0 +1,10 @@
+:queues:
+  - default8
+
+:max_retries: 5
+
+development:
+  :concurrency: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+production:
+  :concurrency: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
