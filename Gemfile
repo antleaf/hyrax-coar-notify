@@ -82,3 +82,6 @@ end
 
 # role management gem
 gem 'hydra-role-management'
+
+# COAR Notify Inbox
+gem "coar_notify_inbox", git: "https://github.com/antleaf/coar-notify-inbox-rails-engine"
