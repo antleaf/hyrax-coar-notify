@@ -1,0 +1,131 @@
+<%= form_with(model: notify_inbox) do |form| %>
+  <% if notify_inbox.errors.any? %>
+    <div class="alert alert-danger">
+      <h5>
+        <%= pluralize(notify_inbox.errors.count, "error") %> prohibited this notify inbox from being saved:
+      </h5>
+
+      <ul class="mb-0">
+        <% notify_inbox.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="card-body">
+
+      <div class="form-group row">
+        <%= form.label :title, class: "col-md-3 col-form-label" %>
+
+        <div class="col-md-9">
+          <%= form.text_field :title, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <%= form.label :service_url, "Service URL", class: "col-md-3 col-form-label" %>
+
+        <div class="col-md-9">
+          <%= form.text_field :service_url, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <%= form.label :api_key, "API Key", class: "col-md-3 col-form-label" %>
+
+        <div class="col-md-9">
+          <%= form.text_field :api_key, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label">Target URIs</label>
+
+        <div class="col-md-9">
+          <div id="target-uri-container">
+
+            <% (notify_inbox.target_urls.presence || [""]).each_with_index do |url, index| %>
+              <div class="input-group mb-2 target-uri-row">
+                <input type="text"
+                       name="notify_inbox[target_urls][]"
+                       value="<%= url %>"
+                       class="form-control">
+
+                <div class="input-group-append">
+                  <% if index.zero? %>
+                    <button type="button" class="btn btn-success add-uri">
+                      Add
+                    </button>
+                  <% else %>
+                    <button type="button" class="btn btn-danger remove-uri">
+                      Remove
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-md-3 col-form-label">Status</label>
+
+        <div class="col-md-9">
+          <div class="custom-control custom-radio">
+            <%= form.radio_button :status,
+                                  true,
+                                  class: "custom-control-input",
+                                  id: "notify_inbox_status_active" %>
+
+            <label class="custom-control-label" for="notify_inbox_status_active">
+              Active
+            </label>
+          </div>
+
+          <div class="custom-control custom-radio mt-2">
+            <%= form.radio_button :status,
+                                  false,
+                                  checked: !notify_inbox.status,
+                                  class: "custom-control-input",
+                                  id: "notify_inbox_status_inactive" %>
+
+            <label class="custom-control-label" for="notify_inbox_status_inactive">
+              Inactive
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer text-right">
+      <%= form.submit "Save", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $(document).on('click', '.add-uri', function() {
+    $('#target-uri-container').append(`
+      <div class="input-group mb-2 target-uri-row">
+        <input type="text"
+               name="notify_inbox[target_urls][]"
+               class="form-control">
+
+        <div class="input-group-append">
+          <button type="button" class="btn btn-danger remove-uri">
+            Remove
+          </button>
+        </div>
+      </div>
+    `);
+  });
+
+  $(document).on('click', '.remove-uri', function() {
+    $(this).closest('.target-uri-row').remove();
+  });
+</script>

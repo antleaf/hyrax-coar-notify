@@ -1,0 +1,120 @@
+<div class="container-fluid">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white">
+      <li class="breadcrumb-item">
+        <%= link_to "Home", root_path %>
+      </li>
+
+      <li class="breadcrumb-item">
+        <%= link_to "Notify Dashboard", notify_dashboard_path %>
+      </li>
+
+      <li class="breadcrumb-item active">
+        Manage Notify Connections
+      </li>
+    </ol>
+  </nav>
+
+  <div class="text-center mb-4">
+
+    <%= link_to "Register Notify Service",
+                "#",
+                class: "btn btn-primary mr-3" %>
+
+    <%= link_to "Register Notify Inbox",
+                new_notify_inbox_path,
+                class: "btn btn-success" %>
+
+  </div>
+
+  <h3 class="mb-3">Review Services</h3>
+
+  <table class="table table-bordered table-striped mb-5">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Participants</th>
+        <th>Status</th>
+        <th width="180">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @notify_services.present? %>
+        <% @notify_services.each do |service| %>
+          <tr>
+            <td><%= service.title %></td>
+            <td><%= service.participants %></td>
+            <td>
+              <span class="badge badge-success">
+                Active
+              </span>
+            </td>
+            <td>
+              Edit | Delete
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="4" class="text-center">
+            No services found
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3 class="mb-3">Inboxes</h3>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Target URIs</th>
+        <th>Status</th>
+        <th width="180">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @notify_inboxes.each do |inbox| %>
+        <tr>
+          <td><%= inbox.title %></td>
+
+          <td>
+            <%= inbox.target_urls.count %> URI(s)
+          </td>
+
+          <td>
+            <span class="badge badge-<%= inbox.status ? 'success' : 'danger' %>">
+              <%= inbox.status ? 'Active' : 'Inactive' %>
+            </span>
+          </td>
+
+          <td>
+            <%= link_to "Edit",
+                        edit_notify_inbox_path(inbox),
+                        class: "btn btn-sm btn-primary" %>
+
+            <%= link_to "Delete",
+                        inbox,
+                        method: :delete,
+                        data: { confirm: "Are you sure?" },
+                        class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @notify_inboxes.blank? %>
+        <tr>
+          <td colspan="4" class="text-center">
+            No inboxes found
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>

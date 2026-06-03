@@ -8,10 +8,14 @@ Rails.application.routes.draw do
   resource :catalog, only: [], as: 'catalog', path: '/catalog', controller: 'catalog' do
     concerns :searchable
   end
+
+  # Add routes for the Notify Dashboard and Notify Inboxes
+  resources :notify_inboxes, except: [:index, :show]
+  get "notify_dashboard", to: "notify_dashboard#index"
+  get "manage_notify_connections", to: "notify_dashboard#manage_connections", as: :manage_notify_connections
+
   devise_for :users
   mount Hydra::RoleManagement::Engine => '/'
-
-
   mount Qa::Engine => '/authorities'
   mount Hyrax::Engine, at: '/'
   mount CoarNotifyInbox::Engine => "/coar_notify_inbox"

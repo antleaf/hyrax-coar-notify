@@ -1,0 +1,12 @@
+<% content_for :title, "Editing notify inbox" %>
+
+<h1>Editing notify inbox</h1>
+
+<%= render "form", notify_inbox: @notify_inbox %>
+
+<br>
+
+<div>
+  <%= link_to "Show this notify inbox", @notify_inbox %> |
+  <%= link_to "Back to notify inboxes", notify_inboxes_path %>
+</div>

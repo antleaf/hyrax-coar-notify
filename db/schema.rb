@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_20_075326) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_02_123653) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -324,6 +324,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_20_075326) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["namespace"], name: "index_minter_states_on_namespace", unique: true
+  end
+
+  create_table "notify_inboxes", force: :cascade do |t|
+    t.string "title"
+    t.string "service_url"
+    t.string "api_key"
+    t.string "target_urls", default: [], array: true
+    t.boolean "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "orm_resources", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
