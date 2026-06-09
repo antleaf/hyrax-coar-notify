@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_02_123653) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_08_053058) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -330,7 +330,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_02_123653) do
     t.string "title"
     t.string "service_url"
     t.string "api_key"
-    t.string "target_urls", default: [], array: true
+    t.string "target_uris", default: [], array: true
+    t.boolean "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notify_services", force: :cascade do |t|
+    t.string "title"
+    t.string "service_url"
+    t.string "api_key"
+    t.string "origin_uris", default: [], array: true
     t.boolean "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

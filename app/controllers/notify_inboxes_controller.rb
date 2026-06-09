@@ -1,5 +1,6 @@
 class NotifyInboxesController < ApplicationController
   before_action :set_notify_inbox, only: %i[ edit update destroy ]
+  with_themed_layout 'dashboard'
 
   def new
     @notify_inbox = NotifyInbox.new
@@ -51,7 +52,7 @@ class NotifyInboxesController < ApplicationController
         :service_url,
         :api_key,
         :status,
-        target_urls: []
+        target_uris: []
       )
     end
 end

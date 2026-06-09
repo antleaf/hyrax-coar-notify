@@ -6,7 +6,7 @@ RSpec.describe "notify_inboxes/new", type: :view do
       title: "MyString",
       service_url: "MyString",
       api_key: "MyString",
-      target_urls: "MyText",
+      target_uris: "MyText",
       status: false
     ))
   end
@@ -22,7 +22,7 @@ RSpec.describe "notify_inboxes/new", type: :view do
 
       assert_select "input[name=?]", "notify_inbox[api_key]"
 
-      assert_select "textarea[name=?]", "notify_inbox[target_urls]"
+      assert_select "textarea[name=?]", "notify_inbox[target_uris]"
 
       assert_select "input[name=?]", "notify_inbox[status]"
     end

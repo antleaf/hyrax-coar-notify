@@ -14,31 +14,27 @@
       </li>
 
       <li class="breadcrumb-item active">
-        <%= notify_inbox.persisted? ? "Edit Notify Inbox" : "Register Notify Inbox" %>
+        <%= notify_service.persisted? ? "Edit Notify Service" : "Register Notify Service" %>
       </li>
     </ol>
   </nav>
+  <%= form_with(model: notify_service) do |form| %>
 
-  <%= form_with(model: notify_inbox) do |form| %>
-    <% if notify_inbox.errors.any? %>
+    <% if notify_service.errors.any? %>
       <div class="alert alert-danger">
-        <h5>
-          <%= pluralize(notify_inbox.errors.count, "error") %> prohibited this notify inbox from being saved:
-        </h5>
-
         <ul class="mb-0">
-          <% notify_inbox.errors.each do |error| %>
-            <li><%= error.full_message %></li>
+          <% notify_service.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
           <% end %>
         </ul>
       </div>
     <% end %>
 
     <div class="card">
-
       <div class="card-header">
-        <h4 class="mb-0"><%= notify_inbox.new_record? ? "Register Notify Inbox" : "Edit Notify Inbox" %></h4>
+        <h4 class="mb-0"><%= notify_service.new_record? ? "Register Notify Service" : "Edit Notify Service" %></h4>
       </div>
+
       <div class="card-body">
 
         <div class="form-group row">
@@ -50,7 +46,7 @@
         </div>
 
         <div class="form-group row">
-          <%= form.label :service_url, "Service URL", class: "col-md-3 col-form-label" %>
+          <%= form.label :service_url, class: "col-md-3 col-form-label" %>
 
           <div class="col-md-9">
             <%= form.text_field :service_url, class: "form-control" %>
@@ -58,7 +54,7 @@
         </div>
 
         <div class="form-group row">
-          <%= form.label :api_key, "API Key", class: "col-md-3 col-form-label" %>
+          <%= form.label :api_key, class: "col-md-3 col-form-label" %>
 
           <div class="col-md-9">
             <%= form.text_field :api_key, class: "form-control" %>
@@ -66,29 +62,35 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-md-3 col-form-label">Target URIs</label>
+          <label class="col-md-3 col-form-label">
+            Origin URIs
+          </label>
 
           <div class="col-md-9">
-            <div id="target-uri-container">
+            <div id="origin-uri-container">
 
-              <% (notify_inbox.target_uris.presence || [""]).each_with_index do |url, index| %>
-                <div class="input-group mb-2 target-uri-row">
+              <% (notify_service.origin_uris.presence || [""]).each_with_index do |uri, index| %>
+                <div class="input-group mb-2 origin-uri-row">
+
                   <input type="text"
-                        name="notify_inbox[target_uris][]"
-                        value="<%= url %>"
+                        name="notify_service[origin_uris][]"
+                        value="<%= uri %>"
                         class="form-control">
 
                   <div class="input-group-append">
                     <% if index.zero? %>
-                      <button type="button" class="btn btn-success add-uri">
+                      <button type="button"
+                              class="btn btn-success add-origin-uri">
                         Add
                       </button>
                     <% else %>
-                      <button type="button" class="btn btn-danger remove-uri">
+                      <button type="button"
+                              class="btn btn-danger remove-origin-uri">
                         Remove
                       </button>
                     <% end %>
                   </div>
+
                 </div>
               <% end %>
 
@@ -97,53 +99,61 @@
         </div>
 
         <div class="form-group row">
-          <label class="col-md-3 col-form-label">Status</label>
+          <label class="col-md-3 col-form-label">
+            Status
+          </label>
 
           <div class="col-md-9">
-            <div class="custom-control custom-radio">
+
+            <div class="custom-control custom-radio mb-2">
               <%= form.radio_button :status,
                                     true,
                                     class: "custom-control-input",
-                                    id: "notify_inbox_status_active" %>
+                                    id: "service_status_active" %>
 
-              <label class="custom-control-label" for="notify_inbox_status_active">
+              <label class="custom-control-label"
+                    for="service_status_active">
                 Active
               </label>
             </div>
 
-            <div class="custom-control custom-radio mt-2">
+            <div class="custom-control custom-radio">
               <%= form.radio_button :status,
                                     false,
-                                    checked: !notify_inbox.status,
+                                    checked: !notify_service.status,
                                     class: "custom-control-input",
-                                    id: "notify_inbox_status_inactive" %>
+                                    id: "service_status_inactive" %>
 
-              <label class="custom-control-label" for="notify_inbox_status_inactive">
+              <label class="custom-control-label"
+                    for="service_status_inactive">
                 Inactive
               </label>
             </div>
+
           </div>
         </div>
 
       </div>
 
       <div class="card-footer text-right">
-        <%= link_to "Cancel", manage_notify_connections_path, class: "btn btn-secondary" %>
+        <%= link_to "Cancel", manage_notify_connections_path, class: "btn btn-secondary mr-2" %>
         <%= form.submit "Save", class: "btn btn-primary" %>
       </div>
     </div>
+
   <% end %>
 </div>
 <script>
-  $(document).on('click', '.add-uri', function() {
-    $('#target-uri-container').append(`
-      <div class="input-group mb-2 target-uri-row">
+  $(document).on('click', '.add-origin-uri', function() {
+    $('#origin-uri-container').append(`
+      <div class="input-group mb-2 origin-uri-row">
         <input type="text"
-               name="notify_inbox[target_uris][]"
+               name="notify_service[origin_uris][]"
                class="form-control">
 
         <div class="input-group-append">
-          <button type="button" class="btn btn-danger remove-uri">
+          <button type="button"
+                  class="btn btn-danger remove-origin-uri">
             Remove
           </button>
         </div>
@@ -151,7 +161,7 @@
     `);
   });
 
-  $(document).on('click', '.remove-uri', function() {
-    $(this).closest('.target-uri-row').remove();
+  $(document).on('click', '.remove-origin-uri', function() {
+    $(this).closest('.origin-uri-row').remove();
   });
 </script>

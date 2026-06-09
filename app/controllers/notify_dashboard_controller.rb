@@ -10,6 +10,6 @@ class NotifyDashboardController < ApplicationController
     @notify_inboxes = NotifyInbox.order(created_at: :desc)
 
     # Replace with actual model later
-    @notify_services = []
+    @notify_services = NotifyService.order(created_at: :desc)
   end
 end

@@ -4,7 +4,7 @@ class CreateNotifyInboxes < ActiveRecord::Migration[7.2]
       t.string :title
       t.string :service_url
       t.string :api_key
-      t.string :target_urls, array: true, default: []
+      t.string :target_uris, array: true, default: []
       t.boolean :status
 
       t.timestamps
