@@ -1,5 +1,5 @@
 class NotifyServicesController < ApplicationController
-  before_action :set_notify_service, only: [:edit, :update, :destroy]
+  load_and_authorize_resource
   with_themed_layout 'dashboard'
 
   def new

@@ -1,5 +1,6 @@
 class NotifyInboxesController < ApplicationController
-  before_action :set_notify_inbox, only: %i[ edit update destroy ]
+
+  load_and_authorize_resource
   with_themed_layout 'dashboard'
 
   def new
@@ -40,11 +41,6 @@ class NotifyInboxesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_notify_inbox
-      @notify_inbox = NotifyInbox.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def notify_inbox_params
       params.require(:notify_inbox).permit(
