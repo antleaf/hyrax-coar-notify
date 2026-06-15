@@ -35,7 +35,7 @@ class NotifyServiceSync
 
   def sync_remote
     notify_service.origin_uris.each do |origin_uri|
-      NotifyApiClient.sync_notify_service(
+      NotifyAPIClient.sync_notify_service(
         username: notify_service.title,
         origin_uri: notify_service.origin_uri,
         active: notify_service.active?
