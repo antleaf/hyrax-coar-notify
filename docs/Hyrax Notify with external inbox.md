@@ -54,6 +54,20 @@ The admin user for the COAR Notify inbox service needs to create a user for the 
 
 ![Notify Inbox - create PCI user](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20create%20PCI%20user.png)
 
+```
+curl -X POST <coar_notify_inbox_service_url>/users \
+  -H "Authorization: Bearer <admin_user_auth_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "name": “<PCI user display name>",
+      "username": “<PCI user username>",
+      "role": "user",
+      "active": true
+    }
+  }'
+```
+
 <div style="page-break-after: always; break-after: page;"></div>
 
 ### 1B - Add senders for the PCI service
@@ -64,6 +78,18 @@ Either the admin user for the COAR Notify inbox service or the PCI user needs to
 
 ![Notify Inbox - register sender](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20register%20sender.png)
 
+```
+curl -s -X POST <coar_notify_inbox_service_url>/senders \
+  -H "Authorization: Bearer <admin_user_auth_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": “<PCI user username>",
+    "origin_uri": “<URI from which requests will originate in PCI>",
+    "target_uris": [“<URI of consumer of the message>, <"Hyrax notify URI"],
+    "sender": {"active": true}
+  }' | jq .
+```
+
 <div style="page-break-after: always; break-after: page;"></div>
 
 ### 1C - Create a user for the Hyrax Notify service
@@ -71,6 +97,20 @@ Either the admin user for the COAR Notify inbox service or the PCI user needs to
 The admin user for the COAR Notify inbox service needs to create a user for the Hyrax Notify service, as shown below, and share the auth_token with Hyrax Notify.
 
 ![Notify Inbox - create Hyrax Notify user](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20create%20Hyrax%20Notify%20user.png)
+
+```
+curl -X POST <coar_notify_inbox_service_url>/users \
+  -H "Authorization: Bearer <admin_user_auth_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "name": “<Hyrax user display name>",
+      "username": “<Hyrax user username>",
+      "role": "user",
+      "active": true
+    }
+  }'
+```
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -154,6 +194,18 @@ This step can be done by the hyrax notify user registered with the inbox ([step 
 
 ![Notify Inbox - register consumer](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20register%20consumer.png)
 
+```
+curl -s -X POST <coar_notify_inbox_service_url>/consumers \
+  -H "Authorization: Bearer <admin_user_auth_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": “<Hyrax user username>",
+    "target_uri": "<hyrax_notify_base_url>",
+    "origin_uris": [“<URI of sender of the message>, <“PCI URI”>],
+    “consumer": {"active": true}
+  }' | jq .
+```
+
 <div style="page-break-after: always; break-after: page;"></div>
 
 ## Step 5 - Hyrax Notify - work view
@@ -168,13 +220,18 @@ The owner of a work has the ability to request an endorsement of the work and vi
 
 The owner of a work has the ability to request an endorsement or a review of the work from their [work view](#Step-5---Hyrax-Notify---work-view) page. The owner can choose the service (from the list of available services) to send the request to.
 
-On clicking on the button to make a request, a background job is created in Hyrax Notify, which will send a Notify notification (of type *Offer - coar-notify:EndorsementAction*) to the chosen service. 
+On clicking on the button to make a request, a background job is created in Hyrax Notify, which will send a Notify notification to the chosen service. 
 
 A notification is also sent to the user, indicating that the request has been sent. This will be visible in [users' notification dashboard](#Step-6---Hyrax-Notify---Users'-notification-dashboard).
 
-#### Request an endorsement or review job
+#### Background job to request an endorsement or review
 
-![Hyrax Notify - work - request endorsement-1](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement-1.png)
+The background job to request an endorsement or review does the following
+
+*  Create a [Notify notification payload](#Request-an-endorsement-or-review-job-payload) - [request endorsement payload](https://coar-notify.net/specification/1.0.1/request-endorsement/) or [request review payload](https://coar-notify.net/specification/1.0.1/request-review/)
+* Send it to the chosen service - for example, send the request to PCI using PCI inbox URL and API key, from PCI service registered in step [4B - Register a Notify service](#4B---Register-a-Notify-service)
+* Create a Hyrax notification for the user, indicating that the request has been sent, along with the response received from the service. This will be visible in [users' notification dashboard](#Step-6---Hyrax-Notify---Users'-notification-dashboard).
+  * If the response is an [Un-processable Notification](https://coar-notify.net/specification/1.0.1/unprocessable/), this needs to be handled.
 
 ![Hyrax Notify - work - request endorsement-2](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement-2.png)
 
@@ -182,7 +239,11 @@ A notification is also sent to the user, indicating that the request has been se
 
 #### Request an endorsement or review job payload
 
+Hyrax Notify will create a [request endorsement payload](https://coar-notify.net/specification/1.0.1/request-endorsement/) or [request review payload](https://coar-notify.net/specification/1.0.1/request-review/), based on the type of request.
+
 ![Hyrax Notify - work - request endorsement payload](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement%20payload.png)
+
+<div style="color: green; font-weight: bold">When the hyrax work has multiple files, we will add the link only to the doc, docx and pdf files</div>
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -194,7 +255,7 @@ For all the different COAR Notify notification types - [Accept a request](https:
 
 In addition, for the announcement notifications - [Announce Endorsement](https://coar-notify.net/specification/1.0.1/announce-endorsement/), [Announce Relationship](https://coar-notify.net/specification/1.0.1/announce-relationship/) and [Announce Review](https://coar-notify.net/specification/1.0.1/announce-review/) - a relationship is created in the work for the endorsement, relationship or review. This is visible in the [work view](#Step-5---Hyrax-Notify---work-view) page. The owner of the work can delete the endorsement / review / relationship from their work, if desired.
 
-**Note:** 
+<div style="color: red; font-weight: bold">Note:</div> 
 
 When a user receives a COAR Notify notification of type [Tentatively Reject a request](https://coar-notify.net/specification/1.0.1/tentative-reject/), the reviewer typically requests changes to the work. For this use case, a new version of the work needs to be created, before submitting a review / endorsement again to the review service. . We need to send the link to the previous notification as in-reply. 
 
@@ -202,7 +263,22 @@ When a user receives a COAR Notify notification of type [Tentatively Reject a re
 
 <div style="page-break-after: always; break-after: page;"></div>
 
-#### Receive Notify notifications and create relationships job
+#### Background job to receive Notify notifications and create relationships
+
+The background job to receive Notify notifications and create relationships does the following
+
+1. Get a list of notification since the last run from the inbox
+
+2. Process each notification, create a Hyrax Notify user notification, informing the user of the notification.
+
+3. When the notification is an announcement notification, add a relationship in the work metadata.
+
+   * If the work does not exist, create a Hyrax Notify user notification informing the user of the notification for the missing work.
+   * If the actor does not exist, create a Hyrax Notify user notification informing the admin of the notification for the work.
+
+   
+   
+
 
 ![Hyrax Notify - work - receive notification and create relationships](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20receive%20notification%20and%20create%20relationships.png)
 
@@ -219,6 +295,14 @@ The Hyrax Notify users’ dashboard will have notification sent to the user by t
 ## Step 7 - Hyrax Notify - Messages in the [Notify dashboard](#Step-3---Hyrax-Notify---Notify-dashboard)
 
 The Notify dashboard displays the latest notifications received by the Notify inbox before the last run (to only show processed messages).
+
+### Get notifications for the [Notify dashboard](#Step-3---Hyrax-Notify---Notify-dashboard)
+
+The notifications are obtained from the Notify Inbox, by making a HTTP request to `/notifications/consumer/<consumer_url>`
+
+1. Define number of notifications to show in an ENV variable `hyrax_notify_notifications_limit`
+
+2. Get a list of latest (*hyrax_notify_notifications_limit*) notifications received in the inbox (**before last run?**)
 
 ![Hyrax Notify - messages in the Notify dashboard-2](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20messages%20in%20the%20Notify%20dashboard-2.png)
 
