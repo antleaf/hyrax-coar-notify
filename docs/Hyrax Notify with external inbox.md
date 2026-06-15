@@ -222,7 +222,7 @@ The owner of a work has the ability to request an endorsement or a review of the
 
 On clicking on the button to make a request, a background job is created in Hyrax Notify, which will send a Notify notification to the chosen service. 
 
-A notification is also sent to the user, indicating that the request has been sent. This will be visible in [users' notification dashboard](#Step-6---Hyrax-Notify---Users'-notification-dashboard).
+A notification is also sent to the user, indicating that the request has been sent. This will be visible in [users' notification dashboard](#step-6---hyrax-notify---users-notification-dashboard).
 
 #### Background job to request an endorsement or review
 
@@ -230,7 +230,7 @@ The background job to request an endorsement or review does the following
 
 *  Create a [Notify notification payload](#Request-an-endorsement-or-review-job-payload) - [request endorsement payload](https://coar-notify.net/specification/1.0.1/request-endorsement/) or [request review payload](https://coar-notify.net/specification/1.0.1/request-review/)
 * Send it to the chosen service - for example, send the request to PCI using PCI inbox URL and API key, from PCI service registered in step [4B - Register a Notify service](#4B---Register-a-Notify-service)
-* Create a Hyrax notification for the user, indicating that the request has been sent, along with the response received from the service. This will be visible in [users' notification dashboard](#Step-6---Hyrax-Notify---Users'-notification-dashboard).
+* Create a Hyrax notification for the user, indicating that the request has been sent, along with the response received from the service. This will be visible in [users' notification dashboard](#step-6---hyrax-notify---users-notification-dashboard).
   * If the response is an [Un-processable Notification](https://coar-notify.net/specification/1.0.1/unprocessable/), this needs to be handled.
 
 ![Hyrax Notify - work - request endorsement-2](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement-2.png)
@@ -251,7 +251,7 @@ Hyrax Notify will create a [request endorsement payload](https://coar-notify.net
 
 Hyrax Notify has a background job which will periodically get the list of notifications received in the inbox since the last run and each notification is processed.
 
-For all the different COAR Notify notification types - [Accept a request](https://coar-notify.net/specification/1.0.1/accept/), [Reject a request](https://coar-notify.net/specification/1.0.1/reject/), [Tentatively Accept a request](https://coar-notify.net/specification/1.0.1/tentative-accept/), [Tentatively Reject a request](https://coar-notify.net/specification/1.0.1/tentative-reject/), [Announce Endorsement](https://coar-notify.net/specification/1.0.1/announce-endorsement/), [Announce Relationship](https://coar-notify.net/specification/1.0.1/announce-relationship/) and [Announce Review](https://coar-notify.net/specification/1.0.1/announce-review/) - a Hyrax Notify user notification is created to inform the user (actor) of the decision. This will be visible in the [users' notification dashboard](#Step-6---Hyrax-Notify---Users'-notification-dashboard).
+For all the different COAR Notify notification types - [Accept a request](https://coar-notify.net/specification/1.0.1/accept/), [Reject a request](https://coar-notify.net/specification/1.0.1/reject/), [Tentatively Accept a request](https://coar-notify.net/specification/1.0.1/tentative-accept/), [Tentatively Reject a request](https://coar-notify.net/specification/1.0.1/tentative-reject/), [Announce Endorsement](https://coar-notify.net/specification/1.0.1/announce-endorsement/), [Announce Relationship](https://coar-notify.net/specification/1.0.1/announce-relationship/) and [Announce Review](https://coar-notify.net/specification/1.0.1/announce-review/) - a Hyrax Notify user notification is created to inform the user (actor) of the decision. This will be visible in the [users' notification dashboard](#step-6---hyrax-notify---users-notification-dashboard).
 
 In addition, for the announcement notifications - [Announce Endorsement](https://coar-notify.net/specification/1.0.1/announce-endorsement/), [Announce Relationship](https://coar-notify.net/specification/1.0.1/announce-relationship/) and [Announce Review](https://coar-notify.net/specification/1.0.1/announce-review/) - a relationship is created in the work for the endorsement, relationship or review. This is visible in the [work view](#Step-5---Hyrax-Notify---work-view) page. The owner of the work can delete the endorsement / review / relationship from their work, if desired.
 
@@ -286,7 +286,7 @@ The background job to receive Notify notifications and create relationships does
 
 ## Step 6 - Hyrax Notify - Users' notification dashboard
 
-The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Receive Notify notifications and create relationships job](#5B---Receive-Notify-notifications-and-create-relationships-job).
+The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Background job to receive Notify notifications and create relationship](#Background-job-to-receive-Notify-notifications-and-create-relationship).
 
 ![Hyrax Notify - user notifications dashboard](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20user%20notifications%20dashboard.png)
 
