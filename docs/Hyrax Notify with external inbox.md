@@ -24,9 +24,9 @@ The external inbox is provided by the [COAR-Notify Inbox rails engine](https://g
 
 Hyrax Notify will support the following two workflows for COAR Notify
 
-[Repository announces relationship workflow](#coar-notify-Repository-announces-relationship workflow)
+[Repository announces relationship workflow](#COAR-Notif- --Repository-announces-relationship-workflow)
 
-[PCI endorsement workflow](#COAR-Notify-PCI-endorsement-workflow)
+[PCI endorsement workflow](#COAR-Notify---PCI-endorsement-workflow)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -34,7 +34,7 @@ Hyrax Notify will support the following two workflows for COAR Notify
 
 Reference: https://coar-notify.net/catalogue/workflows/repository-relationship-repository/
 
-![COAR Notify - Relationship workflow](./Hyrax notify with external inbox images/COAR Notify - Relationship workflow.png)
+![COAR Notify - Relationship workflow](Hyrax%20notify%20with%20external%20inbox%20images/COAR%20Notify%20-%20Relationship%20workflow.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -42,7 +42,7 @@ Reference: https://coar-notify.net/catalogue/workflows/repository-relationship-r
 
 Reference: https://coar-notify.net/catalogue/workflows/repository-pci/
 
-![COAR Notify - PCI Endorsement workflow](./Hyrax notify with external inbox images/COAR Notify - PCI Endorsement workflow.png)
+![COAR Notify - PCI Endorsement workflow](Hyrax%20notify%20with%20external%20inbox%20images/COAR%20Notify%20-%20PCI%20Endorsement%20workflow.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -52,7 +52,7 @@ Reference: https://coar-notify.net/catalogue/workflows/repository-pci/
 
 The admin user for the COAR Notify inbox service needs to create a user for the PCI service, as shown below, and share the auth_token with PCI.
 
-![Notify Inbox - create PCI user](./Hyrax notify with external inbox images/Notify Inbox - create PCI user.png)
+![Notify Inbox - create PCI user](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20create%20PCI%20user.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -62,7 +62,7 @@ Either the admin user for the COAR Notify inbox service or the PCI user needs to
 
 **NOTE: If the PCI user creates a sender, the sender needs to be activated by the inbox admin user**
 
-![Notify Inbox - register sender](./Hyrax notify with external inbox images/Notify Inbox - register sender.png)
+![Notify Inbox - register sender](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20register%20sender.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -70,7 +70,7 @@ Either the admin user for the COAR Notify inbox service or the PCI user needs to
 
 The admin user for the COAR Notify inbox service needs to create a user for the Hyrax Notify service, as shown below, and share the auth_token with Hyrax Notify.
 
-![Notify Inbox - create Hyrax Notify user](./Hyrax notify with external inbox images/Notify Inbox - create Hyrax Notify user.png)
+![Notify Inbox - create Hyrax Notify user](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20create%20Hyrax%20Notify%20user.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -85,7 +85,7 @@ NOTIFY_MANAGER_ROLE = admin
 
 If a role other than admin is used, the role will need to be created by an admin user within the Hyrax COAR Notify application.
 
-![Hyrax Notify - add role and create users](./Hyrax notify with external inbox images/Hyrax Notify - add role and create users.png)
+![Hyrax Notify - add role and create users](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20add%20role%20and%20create%20users.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -100,7 +100,7 @@ In order to start receiving and sending messages from/to COAR Notify enabled ser
 
 This is done by clicking on *Manage Notify Connections*.
 
-![Hyrax Notify - Notify dashboard](./Hyrax notify with external inbox images/Hyrax Notify - Notify dashboard.png)
+![Hyrax Notify - Notify dashboard](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20Notify%20dashboard.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -112,7 +112,7 @@ Here, we can view a list of all existing Notify related services connected with 
 
 Hyrax Notify will send messages to a Notify service, who will in turn send messages to an inbox, and Hyrax Notify will receive messages from the inbox.
 
-![Hyrax Notify - manage Notify connections](./Hyrax notify with external inbox images/Hyrax Notify - manage Notify connections.png)
+![Hyrax Notify - manage Notify connections](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax Notify%20-%20manage%20Notify%20connections.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -120,13 +120,13 @@ Hyrax Notify will send messages to a Notify service, who will in turn send messa
 
 Before we can receive COAR notify messages, we need to connect to a Notify inbox. 
 
-In [step Ic](#1C-Create-a-user-for-the-Hyrax-Notify-service), we created a user for Hyrax Notify in the inbox and in response, received an auth token from the inbox, which we need to use to authenticate with the inbox.
+In [step Ic](#1C---Create-a-user-for-the-Hyrax-Notify-service), we created a user for Hyrax Notify in the inbox and in response, received an auth token from the inbox, which we need to use to authenticate with the inbox.
 
 To add a connection to the inbox, we need the URI endpoint for the inbox service and the auth token we had received earlier.
 
 This step needs to be done by the user with the role *NOTIFY_MANAGER_ROLE* or an admin user*.*
 
-![Hyrax Notify - register notify inbox](./Hyrax notify with external inbox images/Hyrax Notify - register notify inbox.png)
+![Hyrax Notify - register notify inbox](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20register%20notify%20inbox.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -138,21 +138,21 @@ To add a connection to the service, we need the URI endpoint for the review serv
 
 This step needs to be done by the user with the role *NOTIFY_MANAGER_ROLE* or an admin user*.*
 
-![Hyrax Notify - register Notify service](./Hyrax notify with external inbox images/Hyrax Notify - register Notify service.png)
+![Hyrax Notify - register Notify service](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20register%20Notify%20service.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
 ### 4C - Add a consumer to the inbox
 
-The service registered in the previous step will be sending messages to the inbox service we have signed up to in [step 1c](#1C-Create-a-user-for-the-Hyrax-Notify-service) and [step 4a](#4A-Register-a-Notify-inbox) and Hyrax Notify will get it’s messages from the inbox. In order to be able to link messages received from the review service or repository to Hyrax Notify, we need to be added as a consumer within the inbox.
+The service registered in the previous step will be sending messages to the inbox service we have signed up to in [step 1c](#1C---Create-a-user-for-the-Hyrax-Notify-service) and [step 4a](#4A---Register-a-Notify-inbox) and Hyrax Notify will get it’s messages from the inbox. In order to be able to link messages received from the review service or repository to Hyrax Notify, we need to be added as a consumer within the inbox.
 
-To add a consumer within the inbox, we need the URI endpoint of Hyrax Notify and a list of URIs from which notifications will originate (as obtained in the previous [step 4b](4B-Register-a-Notify-service)).
+To add a consumer within the inbox, we need the URI endpoint of Hyrax Notify and a list of URIs from which notifications will originate (as obtained in the previous [step 4b](#4B---Register-a-Notify-service)).
 
-This step can be done by the hyrax notify user registered with the inbox ([step 1b)](1B-Add-senders-for-the-PCI-service) or the admin user of the inbox. If using the Hyrax Notify user, we will need the auth token for the inbox (from [step 1c](#1C-Create-a-user-for-the-Hyrax-Notify-service)) to authenticate with the service, 
+This step can be done by the hyrax notify user registered with the inbox ([step 1b)](#1B---Add-senders-for-the-PCI-service) or the admin user of the inbox. If using the Hyrax Notify user, we will need the auth token for the inbox (from [step 1c](#1C---Create-a-user-for-the-Hyrax-Notify-service)) to authenticate with the service, 
 
 **NOTE: If the Hyrax Notify user creates a consumer, the consumer needs to be activated by the inbox admin user**
 
-![Notify Inbox - register consumer](./Hyrax notify with external inbox images/Notify Inbox - register consumer.png)
+![Notify Inbox - register consumer](Hyrax%20notify%20with%20external%20inbox%20images/Notify%20Inbox%20-%20register%20consumer.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -160,7 +160,7 @@ This step can be done by the hyrax notify user registered with the inbox ([step 
 
 The owner of a work has the ability to request an endorsement of the work and view all of the endorsements, reviews and relationships for by the work, received as COAR Notify notifications.
 
-![Hyrax Notify - work view](./Hyrax notify with external inbox images/Hyrax Notify - work view.png)
+![Hyrax Notify - work view](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20view.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -174,15 +174,15 @@ A notification is also sent to the user, indicating that the request has been se
 
 #### Request an endorsement or review job
 
-![Hyrax Notify - work - request endorsement-1](./Hyrax notify with external inbox images/Hyrax Notify - work - request endorsement-1.png)
+![Hyrax Notify - work - request endorsement-1](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement-1.png)
 
-![Hyrax Notify - work - request endorsement-2](./Hyrax notify with external inbox images/Hyrax Notify - work - request endorsement-2.png)
+![Hyrax Notify - work - request endorsement-2](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement-2.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
 #### Request an endorsement or review job payload
 
-![Hyrax Notify - work - request endorsement payload](./Hyrax notify with external inbox images/Hyrax Notify - work - request endorsement payload.png)
+![Hyrax Notify - work - request endorsement payload](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20request%20endorsement%20payload.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -204,15 +204,15 @@ When a user receives a COAR Notify notification of type [Tentatively Reject a re
 
 #### Receive Notify notifications and create relationships job
 
-![Hyrax Notify - work - receive notification and create relationships](./Hyrax notify with external inbox images/Hyrax Notify - work - receive notification and create relationships.png)
+![Hyrax Notify - work - receive notification and create relationships](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20work%20-%20receive%20notification%20and%20create%20relationships.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
 ## Step 6 - Hyrax Notify - Users' notification dashboard
 
-The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Receive Notify notifications and create relationships job](#Receive-Notify-notifications-and-create-relationships-job).
+The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Receive Notify notifications and create relationships job](#5B---Receive-Notify-notifications-and-create-relationships-job).
 
-![Hyrax Notify - user notifications dashboard](./Hyrax notify with external inbox images/Hyrax Notify - user notifications dashboard.png)
+![Hyrax Notify - user notifications dashboard](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20user%20notifications%20dashboard.png)
 
 <div style="page-break-after: always; break-after: page;"></div>
 
@@ -220,6 +220,6 @@ The Hyrax Notify users’ dashboard will have notification sent to the user by t
 
 The Notify dashboard displays the latest notifications received by the Notify inbox before the last run (to only show processed messages).
 
-![Hyrax Notify - messages in the Notify dashboard-2](./Hyrax notify with external inbox images/Hyrax Notify - messages in the Notify dashboard-2.png)
+![Hyrax Notify - messages in the Notify dashboard-2](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20messages%20in%20the%20Notify%20dashboard-2.png)
 
-![Hyrax Notify - messages in the Notify dashboard-1](./Hyrax notify with external inbox images/Hyrax Notify - messages in the Notify dashboard-1.png)
+![Hyrax Notify - messages in the Notify dashboard-1](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20messages%20in%20the%20Notify%20dashboard-1.png)

@@ -9,5 +9,5 @@ It depends on the [COAR-Notify Inbox Rails Engine](https://github.com/antleaf/co
 
 The document [wireframes.pdf](docs/Wireframes.pdf)  created as a part of the design process for Hyrax Notify has the wireframes designs. The images for it are at [Wireframe images](docs/Wireframe images/)
 
-The document [Hyrax Notify with external inbox](docs/Hyrax Notify with external inbox.md) details how Hyrax Notify is to be used to send and receive Notify notifications, when configured with an external inbox.
+The document [Hyrax Notify with external inbox](docs/Hyrax%20Notify%20with%20external%20inbox.md) details how Hyrax Notify is to be used to send and receive Notify notifications, when configured with an external inbox.
 
