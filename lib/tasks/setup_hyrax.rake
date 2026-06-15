@@ -18,7 +18,7 @@ namespace :notify do
     # make the requested users
     ######
     Rake::Task['notify:setup_default_roles'].invoke
-
+    admin = Role.find_by(name: "admin")
     seed["users"].each do |user|
       newUser = User.where(email: user["email"]).first_or_create!(password: user["password"], display_name: user["name"])
       if user["role"] == "admin"
