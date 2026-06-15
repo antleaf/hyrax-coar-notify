@@ -286,7 +286,7 @@ The background job to receive Notify notifications and create relationships does
 
 ## Step 6 - Hyrax Notify - Users' notification dashboard
 
-The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Background job to receive Notify notifications and create relationship](#Background-job-to-receive-Notify-notifications-and-create-relationship).
+The Hyrax Notify users’ dashboard will have notification sent to the user by the Hyrax application, including COAR Notify notification messages, received by the [Background job to receive Notify notifications and create relationship](#background-job-to-receive-notify-notifications-and-create-relationships).
 
 ![Hyrax Notify - user notifications dashboard](Hyrax%20notify%20with%20external%20inbox%20images/Hyrax%20Notify%20-%20user%20notifications%20dashboard.png)
 
