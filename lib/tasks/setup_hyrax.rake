@@ -1,5 +1,5 @@
 namespace :notify do
-  desc 'Setup Hyrax, will read from specified file usage: hyrax3_app:setup_hyrax["setup.json"]'
+  desc 'Setup Hyrax, will read from specified file usage: notify:setup_hyrax["setup.json"]'
   task :"setup_hyrax", [:seedfile] => :environment do |task, args|
     seedfile = args.seedfile
     unless args.seedfile.present?
@@ -17,8 +17,8 @@ namespace :notify do
     ##############################################
     # make the requested users
     ######
+    Rake::Task['notify:setup_default_roles'].invoke
 
-    admin = Role.where(name: "admin").first_or_create!
     seed["users"].each do |user|
       newUser = User.where(email: user["email"]).first_or_create!(password: user["password"], display_name: user["name"])
       if user["role"] == "admin"
