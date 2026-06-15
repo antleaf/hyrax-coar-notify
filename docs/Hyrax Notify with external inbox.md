@@ -24,7 +24,7 @@ The external inbox is provided by the [COAR-Notify Inbox rails engine](https://g
 
 Hyrax Notify will support the following two workflows for COAR Notify
 
-[Repository announces relationship workflow](#COAR-Notif- --Repository-announces-relationship-workflow)
+[Repository announces relationship workflow](#COAR-Notif---Repository-announces-relationship-workflow)
 
 [PCI endorsement workflow](#COAR-Notify---PCI-endorsement-workflow)
 
