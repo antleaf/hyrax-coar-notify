@@ -1,6 +1,6 @@
 # app/services/notify_api_client.rb
 
-class NotifyApiClient
+class NotifyAPIClient
   def self.sync_notify_service(params)
     Faraday.post(
       "#{CoarNotifyInboxConfig::API_URL}/coar_notify_inbox/senders",
