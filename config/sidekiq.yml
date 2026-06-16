@@ -1,5 +1,5 @@
 :queues:
-  - default8
+  - default
 
 :max_retries: 5
 
