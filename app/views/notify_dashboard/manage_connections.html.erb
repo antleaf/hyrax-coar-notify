@@ -34,6 +34,8 @@
     <thead>
       <tr>
         <th>Title</th>
+        <th>Service URL</th>
+        <th>Inbox URL</th>
         <th>Participants</th>
         <th>Status</th>
         <th width="180">Action</th>
@@ -45,6 +47,8 @@
         <% @notify_services.each do |service| %>
           <tr>
             <td><%= service.title %></td>
+            <td><%= service.service_url %></td>
+            <td><%= service.inbox_url %></td>
             <td><%= service.origin_uris.join(", ") %></td>
             <td>
               <span class="badge badge-<%= service.status ? 'success' : 'danger' %>">
@@ -80,6 +84,8 @@
     <thead>
       <tr>
         <th>Title</th>
+        <th>Service URL</th>
+        <th>Inbox URL</th>
         <th>Target URIs</th>
         <th>Status</th>
         <th width="180">Action</th>
@@ -90,7 +96,8 @@
       <% @notify_inboxes.each do |inbox| %>
         <tr>
           <td><%= inbox.title %></td>
-
+          <td><%= inbox.service_url %></td>
+          <td><%= inbox.inbox_url %></td>
           <td>
             <%= inbox.target_uris.join(", ") %>
           </td>

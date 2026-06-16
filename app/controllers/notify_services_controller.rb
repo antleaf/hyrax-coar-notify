@@ -46,6 +46,7 @@ class NotifyServicesController < ApplicationController
     params.require(:notify_service).permit(
       :title,
       :service_url,
+      :inbox_url,
       :api_key,
       :status,
       origin_uris: []

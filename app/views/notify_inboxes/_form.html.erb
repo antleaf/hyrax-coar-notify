@@ -58,6 +58,14 @@
         </div>
 
         <div class="form-group row">
+          <%= form.label :inbox_url, "Inbox URL", class: "col-md-3 col-form-label" %>
+
+          <div class="col-md-9">
+            <%= form.text_field :inbox_url, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group row">
           <%= form.label :api_key, "API Key", class: "col-md-3 col-form-label" %>
 
           <div class="col-md-9">
