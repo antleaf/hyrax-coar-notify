@@ -35,8 +35,14 @@ class NotifyServiceSync
 
   def sync_remote
     NotifyAPIClient.sync_notify_service(
-      origin_uri: notify_service.origin_uris,
-      active: notify_service.active?
+      { 
+        consumer: {
+          username: "admin",
+          target_uri: notify_service.inbox_url,
+          origin_uris: notify_service.origin_uris,
+          active: notify_service.active?
+        }
+      }
     )
   end
 end
