@@ -1,0 +1,90 @@
+<% provide :page_title, @presenter.page_title %>
+
+<%= render 'shared/citations' %>
+<div class="row work-type">
+  <div class="col-sm-12">
+    <%= render 'work_type', presenter: @presenter %>
+  </div>
+  <div itemscope itemtype="http://schema.org/CreativeWork" class="col-12">
+    <%= render 'work_title', presenter: @presenter %>
+    <%= render 'show_actions', presenter: @presenter %>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <%= render 'workflow_actions_widget', presenter: @presenter %>
+          <% if @presenter.iiif_viewer? %>
+            <div class="col-sm-12">
+              <%= render 'representative_media', presenter: @presenter, viewer: true %>
+            </div>
+          <% end %>
+          <div class="col-sm-12 text-center">
+            <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.iiif_viewer? %>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.card -->
+
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="card-title"><%= t('hyrax.base.show.metadata') %></h2>
+          <div class="actions d-flex">
+            <div class="dropdown mr-2">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestEndorsementButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Request Endorsement
+              </button>
+              <div class="dropdown-menu" aria-labelledby="RequestEndorsementButton">
+                <% @presenter.notify_services.each do |service| %>
+                  <%= link_to service.title, main_app.request_endorsement_notify_service_path(service, work_id: @presenter.id.to_s), method: :post, class: "dropdown-item" %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestReviewButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Request Review
+              </button>
+              <div class="dropdown-menu" aria-labelledby="RequestReviewButton">
+                <% @presenter.notify_services.each do |service| %>
+                  <%= link_to service.title, main_app.request_review_notify_service_path(service, work_id: @presenter.id.to_s), method: :post, class: "dropdown-item" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <%= render 'work_description', presenter: @presenter %>
+        <%= render 'metadata', presenter: @presenter %>
+      </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title"><%= t('hyrax.base.show.relationships') %></h2>
+      </div>
+      <div class="card-body">
+        <%= render 'relationships', presenter: @presenter %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title"><%= t('.items') %></h2>
+      </div>
+      <div class="card-body">
+        <%= render 'items', presenter: @presenter %>
+      </div>
+    </div>
+
+    <%# TODO: we may consider adding these partials in the future %>
+    <%# = render 'sharing_with', presenter: @presenter %>
+    <%# = render 'user_activity', presenter: @presenter %>
+
+    <span class='hide analytics-event' data-category="work" data-action="work-view" data-name="<%= @presenter.id %>" ></span>
+    <% @presenter.member_of_collection_ids.each do |collection_id| %>
+      <span class='hide analytics-event' data-category="work-in-collection" data-action="work-in-collection-view" data-name="<%= collection_id %>" ></span>
+    <% end %>
+  </div>
+</div>

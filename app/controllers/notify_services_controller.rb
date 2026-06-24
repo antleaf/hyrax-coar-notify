@@ -36,11 +36,27 @@ class NotifyServicesController < ApplicationController
                 notice: "Notify Service deleted successfully."
   end
 
-  private
+  def request_endorsement
+    RequestEndorsementJob.perform_later(
+      work_id: params[:work_id],
+      service_id: @notify_service.id,
+      user_id: current_user.id
+    )
 
-  def set_notify_service
-    @notify_service = NotifyService.find(params[:id])
+    redirect_to request.referer
   end
+
+  def request_review
+    RequestReviewJob.perform_later(
+      work_id: params[:work_id],
+      service_id: @notify_service.id,
+      user_id: current_user.id
+    )
+
+    redirect_to request.referer
+  end
+
+  private
 
   def notify_service_params
     params.require(:notify_service).permit(

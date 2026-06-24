@@ -16,7 +16,12 @@ Rails.application.routes.draw do
 
   # Add routes for the Notify Dashboard and Notify Inboxes
   resources :notify_inboxes, except: [:index, :show]
-  resources :notify_services, except: [:index, :show]
+  resources :notify_services, except: [:index, :show] do
+    member do
+      post 'request_endorsement'
+      post 'request_review'
+    end
+  end
   get "notify_dashboard", to: "notify_dashboard#index"
   get "manage_notify_connections", to: "notify_dashboard#manage_connections", as: :manage_notify_connections
 

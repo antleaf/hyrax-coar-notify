@@ -5,5 +5,4 @@ class NotifyService < ApplicationRecord
   def active?
     status
   end
-
 end
