@@ -26,11 +26,11 @@ class RequestReview
     recipient = [user, depositor].uniq
 
     work_link = ActionController::Base.helpers.link_to(work.id.to_s, work_url, target: '_blank', rel: 'noopener noreferrer')
-    subject = "Request Review"
+    subject = I18n.t("request_review_notification.subject")
     if response.success?
-      message = "Your request for review of the work #{work_link} has been submitted. Response: #{response.body}"
+      message = I18n.t("request_review_notification.success_body", work_link: work_link, response_body: response.body)
     else
-      message = "There was an error submitting your request for review of the work #{work_link}. Please try again later. Response: #{response.body}"
+      message = I18n.t("request_review_notification.failure_body", work_link: work_link, response_body: response.body)
     end
 
     Hyrax::MessengerService.deliver(user, recipient, message, subject)

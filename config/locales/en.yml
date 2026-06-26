@@ -29,3 +29,14 @@
 
 en:
   hello: "Hello world"
+  request_endorsement_notification:
+    subject: "Request Endorsement"
+    success_body: "Your request for endorsement of the work %{work_link} has been submitted. Response: %{response_body}"
+    failure_body: "There was an error submitting your request for endorsement of the work %{work_link}. Please try again later. Response: %{response_body}"
+    queued: "Your endorsement request has been queued for processing. You will receive a notification when the request has been processed."
+
+  request_review_notification:
+    subject: "Request Review"
+    success_body: "Your request for review of the work %{work_link} has been submitted. Response: %{response_body}"
+    failure_body: "There was an error submitting your request for review of the work %{work_link}. Please try again later. Response: %{response_body}"
+    queued: "Your review request has been queued for processing. You will receive a notification when the request has been processed."

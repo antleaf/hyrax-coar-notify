@@ -43,6 +43,7 @@ class NotifyServicesController < ApplicationController
       user_id: current_user.id
     )
 
+    flash[:notice] = I18n.t("request_endorsement_notification.queued")
     redirect_to request.referer
   end
 
@@ -53,6 +54,7 @@ class NotifyServicesController < ApplicationController
       user_id: current_user.id
     )
 
+    flash[:notice] = I18n.t("request_review_notification.queued")
     redirect_to request.referer
   end
 

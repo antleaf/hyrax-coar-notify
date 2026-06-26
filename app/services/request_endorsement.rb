@@ -25,11 +25,11 @@ class RequestEndorsement
     recipient = [user, depositor].uniq
 
     work_link = ActionController::Base.helpers.link_to(work.id.to_s, work_url, target: '_blank', rel: 'noopener noreferrer')
-    subject = "Request Endorsement"
+    subject = I18n.t("request_endorsement_notification.subject")
     if response.success?
-      message = "Your request for endorsement of the work #{work_link} has been submitted. Response: #{response.body}"
+      message = I18n.t("request_endorsement_notification.success_body", work_link: work_link, response_body: response.body)
     else
-      message = "There was an error submitting your request for endorsement of the work #{work_link}. Please try again later. Response: #{response.body}"
+      message = I18n.t("request_endorsement_notification.failure_body", work_link: work_link, response_body: response.body)
     end
 
     Hyrax::MessengerService.deliver(user, recipient, message, subject)
