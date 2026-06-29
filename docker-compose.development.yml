@@ -9,6 +9,7 @@ volumes:
   branding:
   downloads:
   solr:
+  data:
 
 networks:
   internal:
@@ -88,6 +89,7 @@ services:
         FITS_PATH: ${FITS_PATH}
         FITS_VERSION: ${FITS_VERSION}
         DOWNLOAD_PATH: ${DOWNLOAD_PATH}
+        STORAGE_PATH: ${STORAGE_PATH}
     env_file:
       - .env
     networks:
@@ -118,9 +120,8 @@ services:
       - file_uploads:${UPLOADS_PATH}
       - derivatives:${DERIVATIVES_PATH}
       - cache:${CACHE_PATH}
-      - ${HOST_APP_DATA_PATH:-/data/}:/data/data
-      - .:/data:cached
       - downloads:${DOWNLOAD_PATH}
+      - data:${STORAGE_PATH}
     logging:
       options:
         max-size: "10m"
@@ -139,9 +140,8 @@ services:
       - file_uploads:${UPLOADS_PATH}
       - derivatives:${DERIVATIVES_PATH}
       - cache:${CACHE_PATH}
-      - ${HOST_APP_DATA_PATH:-/data/}:/data/data
-      - .:/data:cached
       - downloads:${DOWNLOAD_PATH}
+      - data:${STORAGE_PATH}
     logging:
       options:
         max-size: "10m"

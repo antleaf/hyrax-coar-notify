@@ -77,7 +77,7 @@ Valkyrie.config.metadata_adapter = ENV.fetch('VALKYRIE_METADATA_ADAPTER') { :pg_
 # )
 
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::VersionedDisk.new(base_path: Rails.root.join("storage", "files"),
+  Valkyrie::Storage::VersionedDisk.new(base_path: ENV.fetch('STORAGE_PATH', '/shared/data'),
                                        file_mover: FileUtils.method(:cp)),
   :versioned_disk_storage
 )

@@ -8,6 +8,7 @@ volumes:
   derivatives:
   cache:
   downloads:
+  data:
 
 networks:
   internal:
@@ -88,6 +89,7 @@ services:
         FITS_PATH: ${FITS_PATH}
         FITS_VERSION: ${FITS_VERSION}
         DOWNLOAD_PATH: ${DOWNLOAD_PATH}
+        STORAGE_PATH: ${STORAGE_PATH}
     env_file:
       - .env
     volumes:
@@ -95,6 +97,7 @@ services:
       - derivatives:${DERIVATIVES_PATH}
       - cache:${CACHE_PATH}
       - downloads:${DOWNLOAD_PATH}
+      - data:${STORAGE_PATH}
     networks:
       internal:
 

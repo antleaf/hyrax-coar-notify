@@ -8,6 +8,7 @@ ARG UPLOADS_PATH
 ARG CACHE_PATH
 ARG FITS_VERSION
 ARG DOWNLOAD_PATH
+ARG STORAGE_PATH
 ARG REGISTER_VALKYRIE=false
 ARG APP_PRODUCTION=/data/
 ENV NODE_OPTIONS=--openssl-legacy-provider
@@ -23,12 +24,13 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 RUN apk update && \
     apk upgrade && \
     apk add bash build-base curl curl-dev gcompat imagemagick imagemagick-libs imagemagick-dev libreoffice libjpeg libarchive-tools  \
-    libpq-dev libxml2-dev libxslt-dev nodejs openjdk11-jre-headless sqlite-dev tzdata yarn git firefox-esr ghostscript
+    libpq-dev libxml2-dev libxslt-dev nodejs openjdk11-jre-headless sqlite-dev tzdata yarn git firefox-esr ghostscript vips vips-dev
+
 
 # install required fonts for testing
 RUN apk add --no-cache fontconfig ttf-dejavu ttf-liberation
 
-COPY policy.xml /etc/ImageMagick-7/policy.xml
+# COPY policy.xml /etc/ImageMagick-7/policy.xml
 
 RUN mkdir -p /fits/fits-$FITS_VERSION \
     && curl --fail --location "https://github.com/harvard-lts/fits/releases/download/$FITS_VERSION/fits-$FITS_VERSION.zip" | bsdtar --extract --directory /fits/fits-$FITS_VERSION \
@@ -54,6 +56,7 @@ RUN mkdir -p $DERIVATIVES_PATH
 RUN mkdir -p $UPLOADS_PATH
 RUN mkdir -p $CACHE_PATH
 RUN mkdir -p $DOWNLOAD_PATH
+RUN mkdir -p $STORAGE_PATH
 
 # copy the application
 COPY . $APP_PRODUCTION
