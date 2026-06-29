@@ -1,4 +1,16 @@
+# frozen_string_literal: true
+
 class RequestReview
+  attr_reader :work, :target, :user
+
+  PREFERRED_MIME_TYPES = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ].freeze
+
+  class MissingFileSetError < StandardError; end
+
   def initialize(work:, target:, user:)
     @work = work
     @target = target
@@ -6,91 +18,117 @@ class RequestReview
   end
 
   def call
-    payload = build_payload
+    request = build_request_review
+    validation_result = request.validate
 
-    response =
-      Faraday.post(@target.inbox_url) do |req|
-        req.headers['Content-Type'] = 'application/ld+json'
-        req.body = payload.to_json
-      end
-
-    save_log(payload, response)
+    response = client.send(request, validate: validation_result)
+    notify_success(response)
+  rescue MissingFileSetError => e
+    notify_failure(e.message)
+  rescue Coarnotify::ValidationError => e
+    notify_failure(format_validation_errors(e))
+  rescue Coarnotify::NotifyException => e
+    notify_failure(e.message)
+  rescue StandardError => e
+    notify_failure(e.message)
   end
 
   private
 
-  attr_reader :work, :target, :user
-
-  def save_log(payload, response)
-    depositor = User.find_by(email: work.depositor)
-    recipient = [user, depositor].uniq
-
-    work_link = ActionController::Base.helpers.link_to(work.id.to_s, work_url, target: '_blank', rel: 'noopener noreferrer')
-    subject = I18n.t("request_review_notification.subject")
-    if response.success?
-      message = I18n.t("request_review_notification.success_body", work_link: work_link, response_body: response.body)
-    else
-      message = I18n.t("request_review_notification.failure_body", work_link: work_link, response_body: response.body)
+  def build_request_review
+    Coarnotify::Patterns::RequestReview.new.tap do |request|
+      request.actor = build_actor
+      request.origin = build_origin
+      request.target = build_target
+      request.object = build_object
     end
-
-    Hyrax::MessengerService.deliver(user, recipient, message, subject)
   end
 
-  def build_payload
-    {
-      "@context": [
-        "https://www.w3.org/ns/activitystreams",
-        "https://coar-notify.net"
-      ],
-      "id": "urn:uuid:#{work.id.to_s}",
-      "actor": {
-        "id": "mailto:#{user.email}",
-        "name": user.display_name,
-        "type": "Person"
-      },
-      "object": {
-        "id": work_url,
-        "ietf:cite-as": work_doi,
-        "ietf:item": ietf_item,
-        "type": [
-          "page",
-          "sorg:AboutPage"
-        ],
-      },
-      "origin": {
-        "id": repository_url,
-        "inbox": "#{CoarNotifyInboxConfig::BASE_URL}/coar_notify_inbox/notifications",
-        "type": "Service"
-      },
-      "target": {
-        "id": target.service_url,
-        "inbox": target.inbox_url,
-        "type": "Service"
-      },
-      "type": [
-        "Offer",
-        "coar-notify:ReviewAction"
-      ]
-    }
+  def build_actor
+    Coarnotify::Core::Notify::NotifyActor.new.tap do |actor|
+      actor.id = "mailto:#{user.email}"
+      actor.name = user.display_name
+      actor.type = "Person"
+    end
   end
 
-  private
+  def build_origin
+    Coarnotify::Core::Notify::NotifyService.new.tap do |origin|
+      origin.id = repository_url
+      origin.inbox = "#{CoarNotifyInboxConfig::BASE_URL}/coar_notify_inbox/notifications"
+      origin.type = "Service"
+    end
+  end
 
-  def files_payload
-    file_set = Hyrax.query_service
-                    .find_members(resource: work)
-                    .find(&:file_set?)
+  def build_target
+    Coarnotify::Core::Notify::NotifyService.new.tap do |notify_target|
+      notify_target.id = target.service_url
+      notify_target.inbox = target.inbox_url
+      notify_target.type = "Service"
+    end
+  end
 
-    {
-      "id": "#{repository_url}/downloads/#{file_set.id}",
-
-      "mediaType": file_set&.mime_type,
-
-      "type": [
-        "Article",
-        "sorg:ScholarlyArticle"
+  def build_object
+    Coarnotify::Core::Notify::NotifyObject.new.tap do |object|
+      object.id = work_url
+      object.cite_as = work_doi if work_doi.present?
+      object.item = ietf_item if ietf_item.present?
+      object.type = [
+        "Page",
+        "sorg:AboutPage"
       ]
-    }
+    end
+  end
+
+  def client
+    @client ||= Coarnotify::Client::COARNotifyClient.new(
+      inbox_url: target.inbox_url
+    )
+  end
+
+  def notify_success(response)
+    notify(
+      I18n.t(
+        "request_review_notification.success_body",
+        work_link: work_link,
+        response_body: response.body
+      )
+    )
+  end
+
+  def notify_failure(message)
+    notify(
+      I18n.t(
+        "request_review_notification.failure_body",
+        work_link: work_link,
+        response_body: message
+      )
+    )
+  end
+
+  def notify(message)
+    Hyrax::MessengerService.deliver(
+      user,
+      recipients,
+      message,
+      I18n.t("request_review_notification.subject")
+    )
+  end
+
+  def recipients
+    @recipients ||= [user, User.find_by(email: work.depositor)].compact.uniq
+  end
+
+  def work_link
+    @work_link ||= ActionController::Base.helpers.link_to(
+      work.id.to_s,
+      work_url,
+      target: "_blank"
+    )
+  end
+
+  def format_validation_errors(error)
+    error.errors.map { |field, message| "#{field}: #{message}" }.join(", ")
   end
 
   def work_url
@@ -105,25 +143,31 @@ class RequestReview
     ENV.fetch("APPLICATION_URL")
   end
 
-  def user_orcid
-    user.orcid.presence
+  def ietf_item
+    return unless file_set
+
+    Coarnotify::Core::Notify::NotifyItem.new.tap do |item|
+      item.id = download_url(file_set)
+      item.media_type = file_set.original_file&.mime_type
+      item.type = [
+        "Article",
+        "sorg:ScholarlyArticle"
+      ]
+    end
   end
 
-  def ietf_item
-    primary_file = Hyrax.query_service
-                        .find_members(resource: work)
-                        .select(&:file_set?).first
+  def file_set
+    @file_set ||= begin
+      file_sets = Hyrax.query_service.find_members(resource: work).select(&:file_set?)
 
-    return {} unless primary_file
+      file_set = file_sets.find do |fs|
+        PREFERRED_MIME_TYPES.include?(fs.original_file&.mime_type)
+      end || file_sets.first
 
-    {
-      id: download_url(primary_file),
-      mediaType: primary_file.original_file&.mime_type,
-      type: [
-        'Article',
-        'sorg:ScholarlyArticle'
-      ]
-    }
+      raise MissingFileSetError, I18n.t('request_review_notification.fileset_missing') unless file_set
+
+      file_set
+    end
   end
 
   def download_url(file_set)
