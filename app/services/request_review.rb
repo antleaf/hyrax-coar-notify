@@ -18,22 +18,70 @@ class RequestReview
   end
 
   def call
-    request = build_request_review
-    validation_result = request.validate
+    # request = build_request_review
+    # validation_result = request.validate
 
-    response = client.send(request, validate: validation_result)
+    # response = client.send(request, validate: validation_result)
+
+    request = build_payload
+    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request.as_json)}")
+
+    response = Faraday.post(target.inbox_url) do |req|
+          req.headers['Content-Type'] = 'application/ld+json'
+      req.body = request.to_json
+    end
     notify_success(response)
+  rescue Faraday::ConnectionFailed => e
+    notify_failure(e.message)
   rescue MissingFileSetError => e
     notify_failure(e.message)
   rescue Coarnotify::ValidationError => e
     notify_failure(format_validation_errors(e))
   rescue Coarnotify::NotifyException => e
     notify_failure(e.message)
-  rescue StandardError => e
+  rescue Exception => e
     notify_failure(e.message)
   end
 
   private
+
+  def build_payload
+    {
+        "@context": [
+          "https://www.w3.org/ns/activitystreams",
+          "https://coar-notify.net"
+        ],
+        "id": "urn:uuid:#{work.id.to_s}",
+        "actor": {
+          "id": "mailto:#{user.email}",
+          "name": user.display_name,
+          "type": "Person"
+        },
+        "object": {
+          "id": work_url,
+          "ietf:cite-as": work_doi,
+          "ietf:item": ietf_item,
+          "type": [
+            "page",
+            "sorg:AboutPage"
+          ],
+        },
+        "origin": {
+          "id": repository_url,
+          "inbox": "#{CoarNotifyInboxConfig::BASE_URL}/coar_notify_inbox/notifications",
+          "type": "Service"
+        },
+        "target": {
+          "id": target.service_url,
+          "inbox": target.inbox_url,
+          "type": "Service"
+        },
+        "type": [
+          "Offer",
+          "coar-notify:EndorsementAction"
+        ]
+    }
+  end
 
   def build_request_review
     Coarnotify::Patterns::RequestReview.new.tap do |request|
@@ -146,15 +194,28 @@ class RequestReview
   def ietf_item
     return unless file_set
 
-    Coarnotify::Core::Notify::NotifyItem.new.tap do |item|
-      item.id = download_url(file_set)
-      item.media_type = file_set.original_file&.mime_type
-      item.type = [
-        "Article",
-        "sorg:ScholarlyArticle"
+    {
+      id: download_url(file_set),
+      mediaType: file_set.original_file&.mime_type,
+      type: [
+        'Article',
+        'sorg:ScholarlyArticle'
       ]
-    end
+    }
   end
+
+  # def ietf_item
+  #   return unless file_set
+
+  #  Coarnotify::Core::Notify::NotifyItem.new.tap do |item|
+  #     item.id = download_url(file_set)
+  #     item.media_type = file_set.original_file&.mime_type
+  #     item.type = [
+  #       "Article",
+  #       "sorg:ScholarlyArticle"
+  #     ]
+  #   end
+  # end
 
   def file_set
     @file_set ||= begin
