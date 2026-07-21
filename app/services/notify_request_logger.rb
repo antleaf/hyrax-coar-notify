@@ -42,7 +42,7 @@ class NotifyRequestLogger
     return unless identifier
 
     identifier = identifier.to_s
-    return Regexp.last_match(1) if identifier =~ %r{/concern/[^/]+/([^/?#]+)$}
+    return Regexp.last_match(1) if identifier =~ %r{/concern/[^/]+/([^/?#]+)}
 
     identifier
   end
