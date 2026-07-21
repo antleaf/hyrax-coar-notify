@@ -24,9 +24,7 @@ class NotifyRequestLogger
     request = NotifyRequest.find_by(work_id: work_id)
     return unless request
 
-    request.update(
-        status: status,
-      )
+    request.update(status: status)
     request
   end
 
