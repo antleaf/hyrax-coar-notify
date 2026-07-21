@@ -32,14 +32,14 @@ module CoarNotify
 
     def process_relationships(coar_notification, notification)
       work_id = NotifyRequestLogger.work_id_from(notification)
-      return if work_id.empty?
+      return if work_id.blank?
 
       work = Hyrax.query_service.find_by(id: work_id)
       return unless work
 
-      work.status = NotifyRequest.statuses.values.include?(notification["type"]) ? notification["type"] : "sent"
+      work.status = NotifyRequest.statuses.values.include?(coar_notification.status) ? coar_notification.status : "sent"
       work.note = ''
-      work.endorsement_url = notification.dig("object", "id")
+      work.endorsement_url = notification.dig("raw_payload", "object", "id")
 
       updated_work = Hyrax.persister.save(resource: work)
     end

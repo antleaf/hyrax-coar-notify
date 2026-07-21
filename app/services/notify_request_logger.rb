@@ -15,7 +15,7 @@ class NotifyRequestLogger
 
   def self.update_requests_for_notification(notification)
     work_id = work_id_from(notification)
-    return if work_id.empty?
+    return if work_id.blank?
 
     status = notification_status(notification)
 
@@ -24,12 +24,12 @@ class NotifyRequestLogger
 
     request.update(
         status: status,
-        notification_id: notification["id"],
+        notification_id: notification["raw_payload"]["id"],
       )
   end
 
   def self.work_id_from(notification)
-    extract_work_id(notification["inReplyTo"])
+    extract_work_id(notification["raw_payload"]["inReplyTo"])
   end
 
   def self.extract_work_id(identifier)
@@ -43,6 +43,6 @@ class NotifyRequestLogger
   end
 
   def self.notification_status(notification)
-    notification["type"]
+    notification["raw_payload"]["type"].underscore
   end
 end
