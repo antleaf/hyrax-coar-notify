@@ -23,6 +23,7 @@
           <tr>
             <th>Notification ID</th>
             <th>Notification Type</th>
+            <th>Notification Status</th>
             <th>Origin</th>
             <th>Actor</th>
             <th>Object</th>
@@ -35,19 +36,23 @@
               <td><%= notification.id %></td>
 
               <td>
-                <%= notification.notification_type %>
+                <%= notification.request_type %>
               </td>
 
               <td>
-                <%= notification.origin %>
+                <%= notification.status %>
               </td>
 
               <td>
-                <%= notification.actor %>
+                <%= ENV.fetch("APPLICATION_URL") %>
               </td>
 
               <td>
-                <%= notification.object_identifier %>
+                <%= notification.user.display_name %>
+              </td>
+
+              <td>
+                <%= notification.work_id %>
               </td>
             </tr>
           <% end %>

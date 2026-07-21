@@ -1,6 +1,7 @@
 class NotifyServicesController < ApplicationController
   load_and_authorize_resource
   with_themed_layout 'dashboard'
+  before_action :check_duplicate_request, only: [:request_endorsement, :request_review]
 
   def new
     @notify_service = NotifyService.new
@@ -59,6 +60,15 @@ class NotifyServicesController < ApplicationController
   end
 
   private
+
+  def check_duplicate_request
+    work_id = params[:work_id]
+
+    if NotifyRequestLogger.duplicate_request?(work_id: work_id, request_type: action_name)
+      flash[:alert] = I18n.t("notify_service.duplicate_request", request_type: action_name.humanize)
+      redirect_to request.referer
+    end
+  end
 
   def notify_service_params
     params.require(:notify_service).permit(

@@ -17,18 +17,27 @@ class RequestEndorsement
     @user = user
   end
 
-  def call
-    # request = build_request_endorsement
-    # validation_result = request.validate
+  REQUEST_TYPE = "request_endorsement".freeze
 
-    # response = client.send(request, validate: validation_result)
-    request = build_payload
-    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request.as_json)}")
+  def call
+    return if duplicate_request?
+
+    request_payload = build_payload
+    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request_payload.as_json)}")
 
     response = Faraday.post(target.inbox_url) do |req|
-          req.headers['Content-Type'] = 'application/ld+json'
-      req.body = request.to_json
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.body = request_payload.to_json
     end
+
+    NotifyRequestLogger.log_request!(
+      work: work,
+      target: target,
+      user: user,
+      request_type: request_type,
+      status: "sent"
+    )
+
     notify_success(response)
   rescue Faraday::ConnectionFailed => e
     notify_failure(e.message)
@@ -46,7 +55,7 @@ class RequestEndorsement
   private
 
   def build_payload
-    {
+    payload = {
         "@context": [
           "https://www.w3.org/ns/activitystreams",
           "https://coar-notify.net"
@@ -59,7 +68,6 @@ class RequestEndorsement
         },
         "object": {
           "id": work_url,
-          "ietf:cite-as": work_doi,
           "ietf:item": ietf_item,
           "type": [
             "page",
@@ -81,6 +89,12 @@ class RequestEndorsement
           "coar-notify:EndorsementAction"
         ]
     }
+
+    if work.doi.present?
+      payload["object"]["ietf:cite-as"] = work.doi
+    end
+
+    payload
   end
 
   def build_request_endorsement
@@ -186,6 +200,17 @@ class RequestEndorsement
 
   def work_doi
     work.identifier&.first
+  end
+
+  def request_type
+    REQUEST_TYPE
+  end
+
+  def duplicate_request?
+    NotifyRequestLogger.duplicate_request?(
+      work_id: work.id,
+      request_type: request_type
+    )
   end
 
   def repository_url

@@ -131,7 +131,7 @@ services:
     <<: *app
     stdin_open: true
     tty: true 
-    command: bash -c "bundle install && bundle exec sidekiq"
+    command: bash -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
     depends_on:
       - appdb
       - solr

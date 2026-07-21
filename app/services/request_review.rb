@@ -17,19 +17,27 @@ class RequestReview
     @user = user
   end
 
+  REQUEST_TYPE = "request_review".freeze
+
   def call
-    # request = build_request_review
-    # validation_result = request.validate
+    return if duplicate_request?
 
-    # response = client.send(request, validate: validation_result)
-
-    request = build_payload
-    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request.as_json)}")
+    request_payload = build_payload
+    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request_payload.as_json)}")
 
     response = Faraday.post(target.inbox_url) do |req|
-          req.headers['Content-Type'] = 'application/ld+json'
-      req.body = request.to_json
+      req.headers['Content-Type'] = 'application/ld+json'
+      req.body = request_payload.to_json
     end
+
+    NotifyRequestLogger.log_request!(
+      work: work,
+      target: target,
+      user: user,
+      request_type: request_type,
+      status: "sent"
+    )
+
     notify_success(response)
   rescue Faraday::ConnectionFailed => e
     notify_failure(e.message)
@@ -46,7 +54,7 @@ class RequestReview
   private
 
   def build_payload
-    {
+    payload = {
         "@context": [
           "https://www.w3.org/ns/activitystreams",
           "https://coar-notify.net"
@@ -59,7 +67,6 @@ class RequestReview
         },
         "object": {
           "id": work_url,
-          "ietf:cite-as": work_doi,
           "ietf:item": ietf_item,
           "type": [
             "page",
@@ -81,6 +88,12 @@ class RequestReview
           "coar-notify:EndorsementAction"
         ]
     }
+
+    if work.doi.present?
+      payload["object"]["ietf:cite-as"] = work.doi
+    end
+
+    payload
   end
 
   def build_request_review
@@ -119,7 +132,7 @@ class RequestReview
   def build_object
     Coarnotify::Core::Notify::NotifyObject.new.tap do |object|
       object.id = work_url
-      object.cite_as = work_doi if work_doi.present?
+      object.cite_as = work.doi if work.doi.present?
       object.item = ietf_item if ietf_item.present?
       object.type = [
         "Page",
@@ -185,6 +198,17 @@ class RequestReview
 
   def work_doi
     work.identifier&.first
+  end
+
+  def request_type
+    REQUEST_TYPE
+  end
+
+  def duplicate_request?
+    NotifyRequestLogger.duplicate_request?(
+      work_id: work.id,
+      request_type: request_type
+    )
   end
 
   def repository_url

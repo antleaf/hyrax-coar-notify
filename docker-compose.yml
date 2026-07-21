@@ -127,7 +127,7 @@ services:
 
   workers:
     <<: *app
-    command: bash -c "bundle install && bundle exec sidekiq"
+    command: bash -c "bundle install && bundle exec sidekiq -C config/sidekiq.yml"
     restart: unless-stopped
     depends_on:
       - appdb

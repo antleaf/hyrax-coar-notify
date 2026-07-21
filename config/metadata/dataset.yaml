@@ -21,4 +21,22 @@
 # Generated via
 #  `rails generate hyrax:work_resource Dataset`
 
-attributes: {}
+attributes:
+  doi:
+    type: string
+    multiple: false
+    index_keys:
+      - doi_tesim
+      - "doi_sim"
+  endorsement_url:
+    type: string
+    multiple: false
+    index_keys:
+      - endorsement_url_tesim
+      - "endorsement_url_sim"
+  note:
+    type: string
+    multiple: false
+    index_keys:
+      - note_tesim
+      - "note_sim"

@@ -42,3 +42,5 @@ en:
     failure_body: "There was an error submitting your request for review of the work %{work_link}. Please try again later. Response: %{response_body}"
     queued: "Your review request has been queued for processing. You will receive a notification when the request has been processed."
     fileset_missing: "The work must have at least one fileset before requesting review."
+  notify_service:
+    duplicate_request: "A %{request_type} has already been submitted for this work. Please wait for a response before submitting another request."

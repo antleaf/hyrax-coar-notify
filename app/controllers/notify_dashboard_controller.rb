@@ -3,8 +3,8 @@ class NotifyDashboardController < ApplicationController
   def index
     authorize! :access, :notify_dashboard
 
-    @notifications = CoarNotifyInbox::Notification
-                       .order(created_at: :desc)
+    @notifications = NotifyRequest.with_notifications
+                       .order(updated_at: :desc)
                        .limit(1000)
   end
 

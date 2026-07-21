@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_16_093423) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_17_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -335,6 +335,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_16_093423) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "inbox_url"
+  end
+
+  create_table "notify_requests", force: :cascade do |t|
+    t.string "work_id", null: false
+    t.bigint "notify_service_id", null: false
+    t.bigint "user_id"
+    t.string "request_type", null: false
+    t.string "status", default: "sent", null: false
+    t.string "notification_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_id"], name: "index_notify_requests_on_notification_id", unique: true
+    t.index ["notify_service_id"], name: "index_notify_requests_on_notify_service_id"
+    t.index ["status"], name: "index_notify_requests_on_status"
+    t.index ["user_id"], name: "index_notify_requests_on_user_id"
+    t.index ["work_id", "notify_service_id", "request_type"], name: "index_notify_requests_on_work_service_type"
   end
 
   create_table "notify_services", force: :cascade do |t|
@@ -708,6 +724,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_16_093423) do
   add_foreign_key "mailboxer_conversation_opt_outs", "mailboxer_conversations", column: "conversation_id", name: "mb_opt_outs_on_conversations_id"
   add_foreign_key "mailboxer_notifications", "mailboxer_conversations", column: "conversation_id", name: "notifications_on_conversation_id"
   add_foreign_key "mailboxer_receipts", "mailboxer_notifications", column: "notification_id", name: "receipts_on_notification_id"
+  add_foreign_key "notify_requests", "notify_services"
+  add_foreign_key "notify_requests", "users"
   add_foreign_key "permission_template_accesses", "permission_templates"
   add_foreign_key "qa_local_authority_entries", "qa_local_authorities", column: "local_authority_id"
   add_foreign_key "uploaded_files", "users"

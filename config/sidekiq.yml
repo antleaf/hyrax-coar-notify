@@ -3,8 +3,16 @@
 
 :max_retries: 5
 
+:scheduler:
+  :enabled: true
+  :schedule:
+    fetch_coar_notifications:
+      cron: <%= ENV.fetch("FetchNotificationsCornTime", "0 0 * * *") %>
+      class: FetchCoarNotificationsJob
+      queue: default
+
 development:
-  :concurrency: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  concurrency: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 production:
   :concurrency: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
