@@ -22,26 +22,31 @@ module CoarNotify
     private
 
     def save_notification_and_process_relationships(notification)
-      coar_notification = save_notification(notification)
+      coar_notification = create_or_save_notification(notification)
+      return unless coar_notification
       process_relationships(coar_notification, notification)
     end
 
-    def save_notification(notification)
-      NotifyRequestLogger.update_requests_for_notification(notification)
+    def create_or_save_notification(notification)
+      NotifyRequestLogger.create_or_update_requests_for_notification(notification)
     end
 
     def process_relationships(coar_notification, notification)
-      work_id = NotifyRequestLogger.work_id_from(notification)
-      return if work_id.blank?
+      if coar_notification.status == "announce_endorsement" || coar_notification.status == "announce_review"
+        work_id = coar_notification.work_id
+        return if work_id.blank?
 
-      work = Hyrax.query_service.find_by(id: work_id)
-      return unless work
+        work = Hyrax.query_service.find_by(id: work_id)
+        return unless work
 
-      work.status = NotifyRequest.statuses.values.include?(coar_notification.status) ? coar_notification.status : "sent"
-      work.note = ''
-      work.endorsement_url = notification.dig("raw_payload", "object", "id")
+        if coar_notification.status == "announce_endorsement"
+          work.endorsements << {note: "", endorsement_url: notification.dig("raw_payload", "object", "id")}
+        else
+          work.reviews << {note: "", review_url: notification.dig("raw_payload", "object", "id")}
+        end
 
-      updated_work = Hyrax.persister.save(resource: work)
+        updated_work = Hyrax.persister.save(resource: work)
+      end
     end
   end
 end

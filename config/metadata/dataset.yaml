@@ -28,15 +28,15 @@ attributes:
     index_keys:
       - doi_tesim
       - "doi_sim"
-  endorsement_url:
+  endorsements:
     type: string
-    multiple: false
+    multiple: true
     index_keys:
-      - endorsement_url_tesim
-      - "endorsement_url_sim"
-  note:
-    type: string
-    multiple: false
-    index_keys:
-      - note_tesim
-      - "note_sim"
+      - endorsements_tesim
+      - "endorsements_sim"
+  reviews:
+      type: string
+      multiple: true
+      index_keys:
+        - reviews_tesim
+        - "reviews_sim"

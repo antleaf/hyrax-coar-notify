@@ -35,7 +35,8 @@ class RequestReview
       target: target,
       user: user,
       request_type: request_type,
-      status: "sent"
+      status: "sent",
+      notification_id: request_payload["id"]
     )
 
     notify_success(response)

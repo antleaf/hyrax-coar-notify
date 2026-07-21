@@ -9,34 +9,41 @@ class NotifyRequestLogger
       notify_service_id: target.id,
       user: user,
       request_type: request_type,
-      status: status
+      status: status,
+      notification_id: notification_id
     )
   end
 
-  def self.update_requests_for_notification(notification)
-    work_id = work_id_from(notification)
+  def self.create_or_update_requests_for_notification(notification)
+    #tod create or update
+    status = notification_status(notification)
+    work_id = work_id_from(notification, status)
     return if work_id.blank?
 
-    status = notification_status(notification)
 
     request = NotifyRequest.find_by(work_id: work_id)
     return unless request
 
     request.update(
         status: status,
-        notification_id: notification["raw_payload"]["id"],
       )
+    request
   end
 
-  def self.work_id_from(notification)
-    extract_work_id(notification["raw_payload"]["inReplyTo"])
+  def self.work_id_from(notification, status)
+    if status == "announce_endorsement" || status == "announce_review"
+      identifier = notification["raw_payload"]["context"]["id"]
+      extract_work_id(identifier)
+    else
+      identifier = notification["raw_payload"]["object"]["object"]["id"]
+      extract_work_id(identifier)
+    end
   end
 
   def self.extract_work_id(identifier)
     return unless identifier
 
     identifier = identifier.to_s
-    return Regexp.last_match(1) if identifier =~ %r{^urn:uuid:(.+)$}
     return Regexp.last_match(1) if identifier =~ %r{/concern/[^/]+/([^/?#]+)$}
 
     identifier
