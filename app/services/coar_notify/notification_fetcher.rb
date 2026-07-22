@@ -32,14 +32,15 @@ module CoarNotify
     end
 
     def process_relationships(coar_notification, notification)
-      if coar_notification.status == "announce_endorsement" || coar_notification.status == "announce_review"
+      status = coar_notification.status
+      if ["Announced Endorsement", "Announced Review"].include?(status)
         work_id = coar_notification.work_id
         return if work_id.blank?
 
         work = Hyrax.query_service.find_by(id: work_id)
         return unless work
 
-        if coar_notification.status == "announce_endorsement"
+        if status == "Announced Endorsement"
           work.endorsements << {note: "", endorsement_url: notification.dig("raw_payload", "object", "id")}
         else
           work.reviews << {note: "", review_url: notification.dig("raw_payload", "object", "id")}

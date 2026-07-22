@@ -4,11 +4,11 @@ class NotifyRequest < ApplicationRecord
 
   enum status: {
     "Sent" => "sent",
-    "Tentatively accepted" => "tentative_accept",
-    "Announced review" => "announce_review",
-    "Announced endorsement" => "announce_endorsement",
+    "Tentatively Accepted" => "tentative_accept",
+    "Announced Review" => "announce_review",
+    "Announced Endorsement" => "announce_endorsement",
     "Rejected" => "reject",
-    "Tentatively rejected" => "tentative_reject"
+    "Tentatively Rejected" => "tentative_reject"
   }
 
   validates :work_id, :request_type, :status, presence: true
