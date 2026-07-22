@@ -48,6 +48,12 @@ class NotifyRequestLogger
   end
 
   def self.notification_status(notification)
-    notification["raw_payload"]["type"].underscore
+    notificatio_type = notification["raw_payload"]["type"]
+    
+    if notificatio_type.is_a?(Array)
+      notificatio_type[1].include?("EndorsementAction") ? "announce_endorsement" : "announce_review"
+    else
+      notificatio_type.to_s.underscore
+    end
   end
 end
