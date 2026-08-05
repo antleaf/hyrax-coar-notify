@@ -22,8 +22,9 @@ Rails.application.routes.draw do
       post 'request_review'
     end
   end
-  get "notify_dashboard", to: "notify_dashboard#index"
-  get "manage_notify_connections", to: "notify_dashboard#manage_connections", as: :manage_notify_connections
+
+  get "core_notify", to: "core_notify#index"
+  get "manage_notify_connections", to: "core_notify#manage_connections", as: :manage_notify_connections
 
   devise_for :users
   mount Hydra::RoleManagement::Engine => '/'

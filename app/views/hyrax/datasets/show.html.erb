@@ -39,17 +39,18 @@
                 <% end %>
               </div>
             </div>
-
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestReviewButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Request Review
-              </button>
-              <div class="dropdown-menu" aria-labelledby="RequestReviewButton">
-                <% @presenter.notify_services.each do |service| %>
-                  <%= link_to service.title, main_app.request_review_notify_service_path(service, work_id: @presenter.id.to_s), method: :post, class: "dropdown-item" %>
-                <% end %>
+            <% if false %>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestReviewButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Request Review
+                </button>
+                <div class="dropdown-menu" aria-labelledby="RequestReviewButton">
+                  <% @presenter.notify_services.each do |service| %>
+                    <%= link_to service.title, main_app.request_review_notify_service_path(service, work_id: @presenter.id.to_s), method: :post, class: "dropdown-item" %>
+                  <% end %>
+                </div>
               </div>
-            </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -68,6 +69,35 @@
         <%= render 'relationships', presenter: @presenter %>
       </div>
     </div>
+
+    <% debugger %>
+
+    <% if @presenter.endorsements.any? || @presenter.reviews.any? %>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title"><%= t('hyrax.base.show.endorsements_and_reviews') %></h2>
+        </div>
+        <div class="card-body">
+          <% @presenter.endorsements.each do |endorsement| %>
+            <div class="card mb-2">
+              <div class="card-body">
+                <p><strong>Service Provider:</strong> <%= endorsement["service_provider"] %></p>
+                <p><strong>Endorsement URL:</strong> <%= endorsement["endorsement_url"] %></p>
+              </div>
+            </div>
+          <% end %>
+
+          <% @presenter.reviews.each do |review| %>
+            <div class="card mb-2">
+              <div class="card-body">
+                <p><strong>Service Provider:</strong> <%= review["service_provider"] %></p>
+                <p><strong>Review URL:</strong> <%= review["review_url"] %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <div class="card">
       <div class="card-header">

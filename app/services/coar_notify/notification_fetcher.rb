@@ -40,10 +40,14 @@ module CoarNotify
         work = Hyrax.query_service.find_by(id: work_id)
         return unless work
 
+        service_provider = notification.dig("raw_payload", "origin", "id")
+
         if status == "Announced Endorsement"
-          work.endorsements << {note: "", endorsement_url: notification.dig("raw_payload", "object", "id")}
+          work.endorsements << {service_provider: service_provider, endorsement_url: notification.dig("raw_payload", "object", "id")}
+          work.has_endorsement = true
         else
-          work.reviews << {note: "", review_url: notification.dig("raw_payload", "object", "id")}
+          work.reviews << {service_provider: service_provider, review_url: notification.dig("raw_payload", "object", "id")}
+          work.has_review = true
         end
 
         updated_work = Hyrax.persister.save(resource: work)

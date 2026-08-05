@@ -27,4 +27,18 @@ class SolrDocument
   # Do content negotiation for AF models. 
 
   use_extension( Hydra::ContentNegotiation )
+
+  def endorsements
+    data = self['endorsements_tesim'] || []
+    data.map do |str|
+      str.scan(/(\w+)=([^,}]+)/).to_h
+    end
+  end
+
+  def reviews
+    data = self['reviews_tesim'] || []
+    data.map do |str|
+      str.scan(/(\w+)=([^,}]+)/).to_h
+    end
+  end
 end

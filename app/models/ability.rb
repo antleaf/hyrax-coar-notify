@@ -21,7 +21,7 @@ class Ability
     return unless current_user.admin?
     can [:manage], NotifyService
     can [:manage], NotifyInbox
-    can :access, :notify_dashboard
+    can :access, :core_notify
     can :access, :manage_notify_connections
   end
 end

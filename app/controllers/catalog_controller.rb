@@ -69,6 +69,10 @@ class CatalogController < ApplicationController
     config.add_facet_field "generic_type_sim", if: false
     config.add_facet_field "depositor_ssim", label: "Depositor", if: false
 
+    # add facet fields for the new endorsement and review fields
+    config.add_facet_field "has_endorsement_bsi", label: "Has Endorsement", limit: 5
+    config.add_facet_field "has_review_bsi", label: "Has Review", limit: 5
+
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
     # handler defaults, or have no facets.

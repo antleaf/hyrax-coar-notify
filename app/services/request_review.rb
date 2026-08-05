@@ -23,11 +23,13 @@ class RequestReview
     return if duplicate_request?
 
     request_payload = build_payload
-    Rails.logger.info("COAR Notify Request Payload:\n#{JSON.pretty_generate(request_payload.as_json)}")
+    pretty_generated_payload = JSON.pretty_generate(request_payload.as_json)
+    Rails.logger.info("COAR Notify Request Payload:\n#{pretty_generated_payload}")
 
     response = Faraday.post(target.inbox_url) do |req|
       req.headers['Content-Type'] = 'application/ld+json'
-      req.body = request_payload.to_json
+      req.headers['Authorization'] = "Bearer #{target.api_key}" if target.api_key.present?
+      req.body = pretty_generated_payload
     end
 
     NotifyRequestLogger.log_request!(

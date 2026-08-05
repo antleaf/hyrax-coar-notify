@@ -40,3 +40,15 @@ attributes:
       index_keys:
         - reviews_tesim
         - "reviews_sim"
+  has_endorsement:
+    type: string
+    multiple: false
+    index_keys:
+      - has_endorsement_bsi
+      - "has_endorsement_sim"
+  has_review:
+    type: string
+    multiple: false
+    index_keys:
+      - has_review_bsi
+      - "has_review_sim"
