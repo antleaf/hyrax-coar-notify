@@ -228,10 +228,10 @@ GEM
     disposable (0.6.3)
       declarative (>= 0.0.9, < 1.0.0)
       representable (>= 3.1.1, < 4)
-    dotenv (2.8.1)
-    dotenv-rails (2.8.1)
-      dotenv (= 2.8.1)
-      railties (>= 3.2)
+    dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     draper (4.0.6)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -1183,7 +1183,7 @@ GEM
       psych (>= 3.3)
       rdf (~> 3.3)
       rdf-xsd (~> 3.3)
-    zeitwerk (2.7.5)
+    zeitwerk (2.8.1)
 
 PLATFORMS
   aarch64-linux
@@ -1206,7 +1206,7 @@ DEPENDENCIES
   debug
   devise
   devise-guests (~> 0.8)
-  dotenv-rails (~> 2.8)
+  dotenv-rails (~> 3.2)
   fcrepo_wrapper
   hydra-role-management
   hyrax (= 5.2.0)
