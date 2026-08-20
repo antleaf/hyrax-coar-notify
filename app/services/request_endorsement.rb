@@ -71,6 +71,7 @@ class RequestEndorsement
         },
         "object": {
           "id": work_url,
+          "ietf:cite-as": work_doi || work_link,
           "ietf:item": ietf_item,
           "type": [
             "page",
@@ -92,10 +93,6 @@ class RequestEndorsement
           "coar-notify:EndorsementAction"
         ]
     }
-
-    if work.doi.present?
-      payload["object"]["ietf:cite-as"] = work.doi
-    end
 
     payload
   end
