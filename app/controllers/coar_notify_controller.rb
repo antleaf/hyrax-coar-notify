@@ -1,7 +1,7 @@
-class CoreNotifyController < ApplicationController
+class CoarNotifyController < ApplicationController
   with_themed_layout 'dashboard'
   def index
-    authorize! :access, :core_notify
+    authorize! :access, :coar_notify
 
     @notifications = NotifyRequest.with_notifications
                        .order(updated_at: :desc)

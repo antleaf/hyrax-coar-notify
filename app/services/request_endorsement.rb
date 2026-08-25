@@ -71,7 +71,7 @@ class RequestEndorsement
         },
         "object": {
           "id": work_url,
-          "ietf:cite-as": work_doi || work_link,
+          "ietf:cite-as": work_doi || work_url,
           "ietf:item": ietf_item,
           "type": [
             "page",

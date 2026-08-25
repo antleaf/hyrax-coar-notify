@@ -23,8 +23,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get "core_notify", to: "core_notify#index"
-  get "manage_notify_connections", to: "core_notify#manage_connections", as: :manage_notify_connections
+  get "coar_notify", to: "coar_notify#index"
+  get "manage_notify_connections", to: "coar_notify#manage_connections", as: :manage_notify_connections
 
   devise_for :users
   mount Hydra::RoleManagement::Engine => '/'
