@@ -22,7 +22,7 @@ class RequestEndorsement
   def call
     return if duplicate_request?
 
-    request_payload = build_payload
+    request_payload = build_payload.with_indifferent_access
     pretty_generated_payload = JSON.pretty_generate(request_payload.as_json)
     Rails.logger.info("COAR Notify Request Payload:\n#{pretty_generated_payload}")
 
