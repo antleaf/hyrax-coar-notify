@@ -51,6 +51,7 @@ module CoarNotify
         end
 
         updated_work = Hyrax.persister.save(resource: work)
+        Hyrax.index_adapter.save(resource: updated_work)
       end
     end
   end
