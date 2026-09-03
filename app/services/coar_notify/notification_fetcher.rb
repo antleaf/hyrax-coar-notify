@@ -43,10 +43,18 @@ module CoarNotify
         service_provider = notification.dig("raw_payload", "origin", "id")
 
         if status == "Announced Endorsement"
-          work.endorsements << {service_provider: service_provider, endorsement_url: notification.dig("raw_payload", "object", "id")}
+          endorsement = {
+            service_provider: service_provider,
+            endorsement_url: notification.dig("raw_payload", "object", "id")
+          }
+          work.endorsements << endorsement.to_json
           work.has_endorsement = true
         else
-          work.reviews << {service_provider: service_provider, review_url: notification.dig("raw_payload", "object", "id")}
+          review = {
+            service_provider: service_provider,
+            review_url: notification.dig("raw_payload", "object", "id")
+          }
+          work.reviews << review.to_json
           work.has_review = true
         end
 
