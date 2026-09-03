@@ -20,4 +20,12 @@ class Dataset < Hyrax::Work
       request_type: RequestReview::REQUEST_TYPE
     )
   end
+
+  def parsed_endorsements
+    endorsements.map { |endorsement| JSON.parse(endorsement) }
+  end
+
+  def parsed_reviews
+    reviews.map { |review| JSON.parse(review) }
+  end
 end
