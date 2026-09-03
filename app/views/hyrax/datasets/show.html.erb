@@ -76,7 +76,7 @@
           <h2 class="card-title"><%= t('hyrax.base.show.endorsements_and_reviews') %></h2>
         </div>
         <div class="card-body">
-          <% @presenter.parsed_endorsements.each do |endorsement| %>
+          <% @presenter.endorsements.each do |endorsement| %>
             <div class="card mb-2">
               <div class="card-body">
                 <p><strong>Service Provider:</strong> <%= endorsement["service_provider"] %></p>
@@ -85,7 +85,7 @@
             </div>
           <% end %>
 
-          <% @presenter.parsed_reviews.each do |review| %>
+          <% @presenter.reviews.each do |review| %>
             <div class="card mb-2">
               <div class="card-body">
                 <p><strong>Service Provider:</strong> <%= review["service_provider"] %></p>
