@@ -31,14 +31,14 @@ class SolrDocument
   def endorsements
     data = self['endorsements_tesim'] || []
     data.map do |str|
-      str.scan(/(\w+)=([^,}]+)/).to_h
+      JSON.parse(str)
     end
   end
 
   def reviews
     data = self['reviews_tesim'] || []
     data.map do |str|
-      str.scan(/(\w+)=([^,}]+)/).to_h
+      JSON.parse(str)
     end
   end
 end
