@@ -1,46 +1,71 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+---
 en:
-  hello: "Hello world"
-  request_endorsement_notification:
-    subject: "Request Endorsement"
-    success_body: "Your request for endorsement of the work %{work_link} has been submitted. Response: %{response_body}"
-    failure_body: "There was an error submitting your request for endorsement of the work %{work_link}. Please try again later. Response: %{response_body}"
-    queued: "Your endorsement request has been queued for processing. You will receive a notification when the request has been processed."
-    fileset_missing: "The work must have at least one fileset before requesting endorsement."
-
-  request_review_notification:
-    subject: "Request Review"
-    success_body: "Your request for review of the work %{work_link} has been submitted. Response: %{response_body}"
-    failure_body: "There was an error submitting your request for review of the work %{work_link}. Please try again later. Response: %{response_body}"
-    queued: "Your review request has been queued for processing. You will receive a notification when the request has been processed."
-    fileset_missing: "The work must have at least one fileset before requesting review."
-  notify_service:
-    duplicate_request: "A %{request_type} has already been submitted for this work. Please wait for a response before submitting another request."
+  coar_notify:
+    actions:
+      request_endorsement: Request Endorsement
+      request_review: Request Review
+    endorsements: Endorsements
+    endorsements_and_reviews: Endorsements and reviews
+    inbox:
+      action: Action
+      create: Register Notify inbox
+      delete: Delete Notify inbox
+      edit: Edit Notify inbox
+      inbox_found: Showing %{count} registered inbox
+      list: Notify inbox
+      no_inbox: No inbox have been registered
+      status: Status
+      target_urls: Target URLs
+      title: Inbox
+    inbox_url: Inbox URL
+    manage_connections: Manage Notify connections
+    messages:
+      actor: Actor
+      duplicate_request: A %{request_type} has already been submitted for this work.
+        Please wait for a response before submitting another request.
+      id: Message ID
+      inbox_created: Inbox created successfully.
+      inbox_deleted: Inbox deleted successfully.
+      inbox_updated: Inbox updated successfully.
+      messages_found: Showing latest %{count} messages
+      no_messages: No messages found
+      origin: Origin
+      service_created: Notify Service created successfully.
+      service_deleted: Notify Service deleted successfully.
+      service_updated: Notify Service updated successfully.
+      status: Message Status
+      title: Notify messages
+      type: Message Type
+      work_id: Work
+    request_endorsement_notification:
+      failure_body: 'There was an error submitting your request for endorsement of
+        the work %{work_link}. Please try again later. Response: %{response_body}'
+      fileset_missing: The work must have at least one fileset before requesting endorsement.
+      queued: Your endorsement request has been queued for processing. You will receive
+        a notification when the request has been processed.
+      subject: Request Endorsement
+      success_body: 'Your request for endorsement of the work %{work_link} has been
+        submitted. Response: %{response_body}'
+    request_review_notification:
+      failure_body: 'There was an error submitting your request for review of the
+        work %{work_link}. Please try again later. Response: %{response_body}'
+      fileset_missing: The work must have at least one fileset before requesting review.
+      queued: Your review request has been queued for processing. You will receive
+        a notification when the request has been processed.
+      subject: Request Review
+      success_body: 'Your request for review of the work %{work_link} has been submitted.
+        Response: %{response_body}'
+    reviews: Reviews
+    service:
+      action: Action
+      create: Register Notify service
+      delete: Delete Notify service
+      edit: Edit Notify service
+      list: Notify services
+      no_services: No services have been registered
+      participants: Participants
+      services_found: Showing %{count} registered services
+      status: Status
+      title: Service
+    service_url: Service URL
+    title: COAR Notify

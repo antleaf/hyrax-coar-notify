@@ -1,0 +1,177 @@
+<div class="container-fluid"> 
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white">
+      <li class="breadcrumb-item">
+        <%= link_to "Home", (defined?(main_app) ? main_app.root_path : "/") %>
+      </li>
+
+      <li class="breadcrumb-item">
+        <%= link_to I18n.t('coar_notify.title'), (respond_to?(:dashboard_path) ? dashboard_path : root_path) %>
+      </li>
+
+      <li class="breadcrumb-item">
+        <%= link_to I18n.t('coar_notify.manage_connections'), manage_notify_connections_path %>
+      </li>
+
+      <li class="breadcrumb-item active">
+        <%= notify_service.persisted? ? I18n.t('coar_notify.service.create') : I18n.t('coar_notify.service.create') %>
+      </li>
+    </ol>
+  </nav>
+
+  <%= form_with(model: notify_service, url: notify_service.persisted? ? notify_service_path(notify_service) : notify_services_path) do |form| %>
+
+    <% if notify_service.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% notify_service.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><%= notify_service.new_record? ? I18n.t('coar_notify.service.create') : I18n.t('coar_notify.service.edit') %></h4>
+      </div>
+
+      <div class="card-body">
+
+        <div class="form-group row">
+          <%= form.label :title, class: "col-md-3 col-form-label" %>
+
+          <div class="col-md-9">
+            <%= form.text_field :title, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <%= form.label :service_url, class: "col-md-3 col-form-label" %>
+
+          <div class="col-md-9">
+            <%= form.text_field :service_url, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <%= form.label :inbox_url, class: "col-md-3 col-form-label" %>
+
+          <div class="col-md-9">
+            <%= form.text_field :inbox_url, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <%= form.label :api_key, class: "col-md-3 col-form-label" %>
+
+          <div class="col-md-9">
+            <%= form.text_field :api_key, class: "form-control" %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">
+            Origin URIs
+          </label>
+
+          <div class="col-md-9">
+            <div id="origin-uri-container">
+
+              <% (Array(notify_service.origin_uris).presence || [""]).each_with_index do |uri, index| %>
+                <div class="input-group mb-2 origin-uri-row">
+
+                  <input type="text"
+                        name="notify_service[origin_uris][]"
+                        value="<%= uri %>"
+                        class="form-control">
+
+                  <div class="input-group-append">
+                    <% if index.zero? %>
+                      <button type="button"
+                              class="btn btn-success add-origin-uri">
+                        Add
+                      </button>
+                    <% else %>
+                      <button type="button"
+                              class="btn btn-danger remove-origin-uri">
+                        Remove
+                      </button>
+                    <% end %>
+                  </div>
+
+                </div>
+              <% end %>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">
+            <%= I18n.t('coar_notify.service.status') %>
+          </label>
+
+          <div class="col-md-9">
+
+            <div class="custom-control custom-radio mb-2">
+              <%= form.radio_button :status,
+                                    true,
+                                    class: "custom-control-input",
+                                    id: "service_status_active" %>
+
+              <label class="custom-control-label"
+                    for="service_status_active">
+                Active
+              </label>
+            </div>
+
+            <div class="custom-control custom-radio">
+              <%= form.radio_button :status,
+                                    false,
+                                    checked: !notify_service.status,
+                                    class: "custom-control-input",
+                                    id: "service_status_inactive" %>
+
+              <label class="custom-control-label"
+                    for="service_status_inactive">
+                Inactive
+              </label>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-footer text-right">
+        <%= link_to "Cancel", manage_notify_connections_path, class: "btn btn-secondary mr-2" %>
+        <%= form.submit "Save", class: "btn btn-primary" %>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+
+<script>
+  $(document).on('click', '.add-origin-uri', function() {
+    $('#origin-uri-container').append(`
+      <div class="input-group mb-2 origin-uri-row">
+        <input type="text"
+               name="notify_service[origin_uris][]"
+               class="form-control">
+
+        <div class="input-group-append">
+          <button type="button"
+                  class="btn btn-danger remove-origin-uri">
+            Remove
+          </button>
+        </div>
+      </div>
+    `);
+  });
+
+  $(document).on('click', '.remove-origin-uri', function() {
+    $(this).closest('.origin-uri-row').remove();
+  });
+</script>

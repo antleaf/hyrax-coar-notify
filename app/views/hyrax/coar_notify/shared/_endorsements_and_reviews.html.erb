@@ -1,0 +1,42 @@
+<% presenter ||= @presenter %>
+<% endorsements = presenter.respond_to?(:parsed_endorsements) ? presenter.parsed_endorsements : (presenter.respond_to?(:endorsements) ? presenter.endorsements : []) %>
+<% reviews = presenter.respond_to?(:parsed_reviews) ? presenter.parsed_reviews : (presenter.respond_to?(:reviews) ? presenter.reviews : []) %>
+
+<% if endorsements.any? || reviews.any? %>
+  <div class="card mb-4 coar-notify-endorsements-reviews">
+    <div class="card-header">
+      <h2 class="card-title"><%= t('coar_notify.endorsements_and_reviews', default: 'Endorsements & Reviews') %></h2>
+    </div>
+    <div class="card-body">
+      <% if endorsements.any? %>
+        <h4 class="h5 mb-3"><%= t('coar_notify.endorsements', default: 'Endorsements') %></h4>
+        <% endorsements.each do |endorsement| %>
+          <% end_data = endorsement.is_a?(String) ? (JSON.parse(endorsement) rescue {}) : endorsement %>
+          <div class="card mb-2 bg-light">
+            <div class="card-body py-2">
+              <p class="mb-1"><strong>Service Provider:</strong> <%= end_data["service_provider"] || end_data[:service_provider] %></p>
+              <% if (end_data["endorsement_url"] || end_data[:endorsement_url]).present? %>
+                <p class="mb-0"><strong>Endorsement URL:</strong> <%= link_to (end_data["endorsement_url"] || end_data[:endorsement_url]), (end_data["endorsement_url"] || end_data[:endorsement_url]), target: "_blank", rel: "noopener noreferrer" %></p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if reviews.any? %>
+        <h4 class="h5 mb-3 mt-3"><%= t('coar_notify.reviews', default: 'Reviews') %></h4>
+        <% reviews.each do |review| %>
+          <% rev_data = review.is_a?(String) ? (JSON.parse(review) rescue {}) : review %>
+          <div class="card mb-2 bg-light">
+            <div class="card-body py-2">
+              <p class="mb-1"><strong>Service Provider:</strong> <%= rev_data["service_provider"] || rev_data[:service_provider] %></p>
+              <% if (rev_data["review_url"] || rev_data[:review_url]).present? %>
+                <p class="mb-0"><strong>Review URL:</strong> <%= link_to (rev_data["review_url"] || rev_data[:review_url]), (rev_data["review_url"] || rev_data[:review_url]), target: "_blank", rel: "noopener noreferrer" %></p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

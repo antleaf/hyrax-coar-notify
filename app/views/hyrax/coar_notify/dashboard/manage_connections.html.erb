@@ -1,0 +1,139 @@
+<div class="container-fluid">
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white">
+      <li class="breadcrumb-item">
+        <%= link_to "Home", (defined?(main_app) ? main_app.root_path : "/") %>
+      </li>
+
+      <li class="breadcrumb-item">
+        <%= link_to I18n.t('coar_notify.title'), (respond_to?(:dashboard_path) ? dashboard_path : root_path) %>
+      </li>
+
+      <li class="breadcrumb-item active">
+        <%= I18n.t('coar_notify.manage_connections') %>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="text-center mb-4">
+    <%= link_to  I18n.t('coar_notify.service.create'),
+                new_notify_service_path,
+                class: "btn btn-primary mr-3" %>
+
+    <%= link_to  I18n.t('coar_notify.inbox.create'),
+                new_notify_inbox_path,
+                class: "btn btn-success" %>
+  </div>
+
+  <h3 class="mb-3"><%= I18n.t('coar_notify.service.list') %></h3>
+
+  <table class="table table-bordered table-striped mb-5">
+    <thead>
+      <tr>
+        <th><%= I18n.t('coar_notify.service.title') %></th>
+        <th><%= I18n.t('coar_notify.service_url') %></th>
+        <th><%= I18n.t('coar_notify.inbox_url') %></th>
+        <th><%= I18n.t('coar_notify.service.participants') %></th>
+        <th><%= I18n.t('coar_notify.service.status') %></th>
+        <th style="width: 180px;"><%= I18n.t('coar_notify.service.action') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @notify_services.present? %>
+        <% @notify_services.each do |service| %>
+          <tr>
+            <td><%= service.title %></td>
+            <td><%= service.service_url %></td>
+            <td><%= service.inbox_url %></td>
+            <td><%= Array(service.origin_uris).join(", ") %></td>
+            <td>
+              <span class="badge badge-<%= service.status ? 'success' : 'danger' %>">
+                <%= service.status ? 'Active' : 'Inactive' %>
+              </span>
+            </td>
+            <td>
+              <%= link_to  I18n.t('coar_notify.service.edit'),
+                          edit_notify_service_path(service),
+                          class: "btn btn-sm btn-primary" %>
+
+              <%= link_to  I18n.t('coar_notify.service.delete'),
+                          notify_service_path(service),
+                          method: :delete,
+                          data: { turbo_method: :delete, confirm: "Are you sure?" },
+                          class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td colspan="6" class="text-center">
+            <%= I18n.t('coar_notify.service.services_found', count: @services.count) %>
+          </td>
+        </tr>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">
+            <%= I18n.t('coar_notify.service.no_services') %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h3 class="mb-3"><%= I18n.t('coar_notify.inbox.list') %></h3>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th><%= I18n.t('coar_notify.inbox.title') %></th>
+        <th><%= I18n.t('coar_notify.service_url') %>L</th>
+        <th><%= I18n.t('coar_notify.inbox_url') %></th>
+        <th><%= I18n.t('coar_notify.inbox.target_urls') %></th>
+        <th><%= I18n.t('coar_notify.inbox.status') %></th>
+        <th width="180"><%= I18n.t('coar_notify.inbox.action') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% if @notify_inboxes.present? %>
+        <% @notify_inboxes.each do |inbox| %>
+          <tr>
+            <td><%= inbox.title %></td>
+            <td><%= inbox.service_url %></td>
+            <td><%= inbox.inbox_url %></td>
+            <td><%= Array(inbox.target_uris).join(", ") %></td>
+            <td>
+              <span class="badge badge-<%= inbox.status ? 'success' : 'danger' %>">
+                <%= inbox.status ? 'Active' : 'Inactive' %>
+              </span>
+            </td>
+            <td>
+              <%= link_to I18n.t('coar_notify.inbox.edit'),
+                          edit_notify_inbox_path(inbox),
+                          class: "btn btn-sm btn-primary" %>
+
+              <%= link_to I18n.t('coar_notify.inbox.delete'),
+                          notify_inbox_path(inbox),
+                          method: :delete,
+                          data: { turbo_method: :delete, confirm: "Are you sure?" },
+                          class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+        <tr>
+          <td colspan="6" class="text-center">
+            <%= I18n.t('coar_notify.inbox.inbox_found', count: @notify_inboxes.count) %>
+          </td>
+        </tr>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center">
+            <%= I18n.t('coar_notify.inbox.no_inbox') %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>

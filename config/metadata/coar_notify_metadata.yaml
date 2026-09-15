@@ -1,0 +1,32 @@
+# Metadata attributes for Hyrax works supporting COAR Notify workflows
+attributes:
+  doi:
+    type: string
+    multiple: false
+    index_keys:
+      - doi_tesim
+      - "doi_sim"
+  endorsements:
+    type: string
+    multiple: true
+    index_keys:
+      - endorsements_tesim
+      - "endorsements_sim"
+  reviews:
+    type: string
+    multiple: true
+    index_keys:
+      - reviews_tesim
+      - "reviews_sim"
+  has_endorsement:
+    type: string
+    multiple: false
+    index_keys:
+      - has_endorsement_bsi
+      - "has_endorsement_sim"
+  has_review:
+    type: string
+    multiple: false
+    index_keys:
+      - has_review_bsi
+      - "has_review_sim"

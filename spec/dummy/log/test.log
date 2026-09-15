@@ -1,0 +1,614 @@
+BrowseEverything is not installed or configured
+OkComputer not installed. Skipping health endpoint at `/healthz`. Add `gem "OkComputer"` to your Gemfile if you want to install default health checks.
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading fedora config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/fedora.yml
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading solr config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/solr.yml
+Hyrax::Engine.after_initialize - unable to persist registered roles.
+It is expected during the application installation - during integration tests, rails install.
+It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'
+OkComputer not installed. Skipping health endpoint at `/healthz`. Add `gem "OkComputer"` to your Gemfile if you want to install default health checks.
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading fedora config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/fedora.yml
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading solr config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/solr.yml
+Hyrax::Engine.after_initialize - unable to persist registered roles.
+It is expected during the application installation - during integration tests, rails install.
+It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'
+  [1m[35m (3.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_services"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_services" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "origin_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_inboxes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_inboxes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "target_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_requests"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "notify_requests" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "work_id" varchar NOT NULL, "notify_service_id" integer NOT NULL, "user_id" integer, "request_type" varchar NOT NULL, "status" varchar DEFAULT 'sent' NOT NULL, "notification_id" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_notify_service_id" ON "notify_requests" ("notify_service_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_user_id" ON "notify_requests" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '', "encrypted_password" varchar DEFAULT '', "display_name" varchar, "user_key" varchar, "guest" boolean DEFAULT 0, "orcid" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2026-09-12 02:04:35.691344', '2026-09-12 02:04:35.691347') RETURNING "key"[0m
+OkComputer not installed. Skipping health endpoint at `/healthz`. Add `gem "OkComputer"` to your Gemfile if you want to install default health checks.
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading fedora config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/fedora.yml
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading solr config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/solr.yml
+Hyrax::Engine.after_initialize - unable to persist registered roles.
+It is expected during the application installation - during integration tests, rails install.
+It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'
+  [1m[35m (3.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_services"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_services" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "origin_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_inboxes"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "notify_inboxes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "target_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_requests"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_requests" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "work_id" varchar NOT NULL, "notify_service_id" integer NOT NULL, "user_id" integer, "request_type" varchar NOT NULL, "status" varchar DEFAULT 'sent' NOT NULL, "notification_id" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_notify_service_id" ON "notify_requests" ("notify_service_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_user_id" ON "notify_requests" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '', "encrypted_password" varchar DEFAULT '', "display_name" varchar, "user_key" varchar, "guest" boolean DEFAULT 0, "orcid" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2026-09-12 02:04:50.658776', '2026-09-12 02:04:50.658779') RETURNING "key"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.762406"], ["updated_at", "2026-09-12 02:04:50.762406"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:04:50.763867"], ["updated_at", "2026-09-12 02:04:50.763867"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Load (0.1ms)[0m  [1m[34mSELECT "notify_inboxes".* FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.785064"], ["updated_at", "2026-09-12 02:04:50.785064"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:04:50.786220"], ["updated_at", "2026-09-12 02:04:50.786220"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.798479"], ["updated_at", "2026-09-12 02:04:50.798479"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.861460"], ["updated_at", "2026-09-12 02:04:50.861460"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.5ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-123"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:12345"], ["created_at", "2026-09-12 02:04:50.863651"], ["updated_at", "2026-09-12 02:04:50.863651"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."notification_id" IS NOT NULL AND "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.873863"], ["updated_at", "2026-09-12 02:04:50.873863"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:04:50.878434"], ["updated_at", "2026-09-12 02:04:50.878434"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Load (0.0ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.886374"], ["updated_at", "2026-09-12 02:04:50.886374"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:04:50.887236"], ["updated_at", "2026-09-12 02:04:50.887236"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.9ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "PCI Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/inbox"], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.890535"], ["updated_at", "2026-09-12 02:04:50.890535"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.6ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-valkyrie-101"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:notification-101"], ["created_at", "2026-09-12 02:04:50.894132"], ["updated_at", "2026-09-12 02:04:50.894132"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.1ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."work_id" = ? LIMIT ?[0m  [["work_id", "work-valkyrie-101"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Update (0.2ms)[0m  [1m[33mUPDATE "notify_requests" SET "status" = ?, "updated_at" = ? WHERE "notify_requests"."id" = ?[0m  [["status", "announce_endorsement"], ["updated_at", "2026-09-12 02:04:50.924297"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.1ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community"], ["service_url", "https://pci.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.946256"], ["updated_at", "2026-09-12 02:04:50.946256"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-abc"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", nil], ["created_at", "2026-09-12 02:04:50.949789"], ["updated_at", "2026-09-12 02:04:50.949789"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (3.4ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community In Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/coar_notify/inbox"], ["api_key", "test_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.959428"], ["updated_at", "2026-09-12 02:04:50.959428"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Review Service"], ["service_url", "https://review.peercommunityin.org"], ["inbox_url", "https://review.peercommunityin.org/coar_notify/inbox"], ["api_key", "review_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:04:50.969010"], ["updated_at", "2026-09-12 02:04:50.969010"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+OkComputer not installed. Skipping health endpoint at `/healthz`. Add `gem "OkComputer"` to your Gemfile if you want to install default health checks.
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading fedora config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/fedora.yml
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading solr config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/solr.yml
+Hyrax::Engine.after_initialize - unable to persist registered roles.
+It is expected during the application installation - during integration tests, rails install.
+It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'
+  [1m[35m (4.6ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_services"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_services" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "origin_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_inboxes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_inboxes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "target_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_requests"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_requests" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "work_id" varchar NOT NULL, "notify_service_id" integer NOT NULL, "user_id" integer, "request_type" varchar NOT NULL, "status" varchar DEFAULT 'sent' NOT NULL, "notification_id" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_notify_service_id" ON "notify_requests" ("notify_service_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_user_id" ON "notify_requests" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '', "encrypted_password" varchar DEFAULT '', "display_name" varchar, "user_key" varchar, "guest" boolean DEFAULT 0, "orcid" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2026-09-12 02:05:10.337415', '2026-09-12 02:05:10.337417') RETURNING "key"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.439729"], ["updated_at", "2026-09-12 02:05:10.439729"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.8ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:10.441818"], ["updated_at", "2026-09-12 02:05:10.441818"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Load (0.1ms)[0m  [1m[34mSELECT "notify_inboxes".* FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.465921"], ["updated_at", "2026-09-12 02:05:10.465921"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:10.467374"], ["updated_at", "2026-09-12 02:05:10.467374"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.479241"], ["updated_at", "2026-09-12 02:05:10.479241"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.543966"], ["updated_at", "2026-09-12 02:05:10.543966"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-123"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:12345"], ["created_at", "2026-09-12 02:05:10.546482"], ["updated_at", "2026-09-12 02:05:10.546482"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."notification_id" IS NOT NULL AND "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.554846"], ["updated_at", "2026-09-12 02:05:10.554846"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:10.559092"], ["updated_at", "2026-09-12 02:05:10.559092"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Load (0.1ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.567515"], ["updated_at", "2026-09-12 02:05:10.567515"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:10.568664"], ["updated_at", "2026-09-12 02:05:10.568664"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.9ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "PCI Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/inbox"], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.571620"], ["updated_at", "2026-09-12 02:05:10.571620"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.4ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-valkyrie-101"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:notification-101"], ["created_at", "2026-09-12 02:05:10.574666"], ["updated_at", "2026-09-12 02:05:10.574666"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.1ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."work_id" = ? LIMIT ?[0m  [["work_id", "work-valkyrie-101"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Update (0.2ms)[0m  [1m[33mUPDATE "notify_requests" SET "status" = ?, "updated_at" = ? WHERE "notify_requests"."id" = ?[0m  [["status", "announce_endorsement"], ["updated_at", "2026-09-12 02:05:10.601824"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.2ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community"], ["service_url", "https://pci.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.622318"], ["updated_at", "2026-09-12 02:05:10.622318"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-abc"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", nil], ["created_at", "2026-09-12 02:05:10.625196"], ["updated_at", "2026-09-12 02:05:10.625196"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (3.7ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community In Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/coar_notify/inbox"], ["api_key", "test_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.633525"], ["updated_at", "2026-09-12 02:05:10.633525"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "display_name", "user_key", "guest", "orcid", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "author@example.org"], ["encrypted_password", ""], ["display_name", "Author Name"], ["user_key", nil], ["guest", 0], ["orcid", nil], ["created_at", "2026-09-12 02:05:10.648801"], ["updated_at", "2026-09-12 02:05:10.648801"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-dataset-456"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+COAR Notify Request Payload:
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://coar-notify.net"
+  ],
+  "id": "urn:uuid:work-dataset-456",
+  "actor": {
+    "id": "mailto:author@example.org",
+    "name": "Author Name",
+    "type": "Person"
+  },
+  "object": {
+    "id": "https://repository.example.org/concern/datasets/work-dataset-456",
+    "ietf:cite-as": "10.1234/example.doi",
+    "ietf:item": {
+      "id": "https://repository.example.org/downloads/fs-123",
+      "mediaType": "application/pdf",
+      "type": [
+        "Article",
+        "sorg:ScholarlyArticle"
+      ]
+    },
+    "type": [
+      "page",
+      "sorg:AboutPage"
+    ]
+  },
+  "origin": {
+    "id": "https://repository.example.org",
+    "inbox": "https://repository.example.org/coar_notify_inbox/notifications",
+    "type": "Service"
+  },
+  "target": {
+    "id": "https://evolbiol.peercommunityin.org",
+    "inbox": "https://evolbiol.peercommunityin.org/coar_notify/inbox",
+    "type": "Service"
+  },
+  "type": [
+    "Offer",
+    "coar-notify:EndorsementAction"
+  ]
+}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Load (1.0ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-dataset-456"], ["notify_service_id", 1], ["user_id", 1], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:work-dataset-456"], ["created_at", "2026-09-12 02:05:10.660143"], ["updated_at", "2026-09-12 02:05:10.660143"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "author@example.org"], ["LIMIT", 1]]
+Hyrax::MessengerService delivery failed: undefined method 'send_message' for an instance of User
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.1ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" ORDER BY "notify_requests"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Review Service"], ["service_url", "https://review.peercommunityin.org"], ["inbox_url", "https://review.peercommunityin.org/coar_notify/inbox"], ["api_key", "review_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:10.672428"], ["updated_at", "2026-09-12 02:05:10.672428"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "display_name", "user_key", "guest", "orcid", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "author@example.org"], ["encrypted_password", ""], ["display_name", "Author Name"], ["user_key", nil], ["guest", 0], ["orcid", nil], ["created_at", "2026-09-12 02:05:10.673529"], ["updated_at", "2026-09-12 02:05:10.673529"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-dataset-789"], ["request_type", "request_review"], ["LIMIT", 1]]
+COAR Notify Request Payload:
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://coar-notify.net"
+  ],
+  "id": "urn:uuid:work-dataset-789",
+  "actor": {
+    "id": "mailto:author@example.org",
+    "name": "Author Name",
+    "type": "Person"
+  },
+  "object": {
+    "id": "https://repository.example.org/concern/datasets/work-dataset-789",
+    "ietf:cite-as": "10.1234/example.review.doi",
+    "ietf:item": {
+      "id": "https://repository.example.org/downloads/fs-999",
+      "mediaType": "application/pdf",
+      "type": [
+        "Article",
+        "sorg:ScholarlyArticle"
+      ]
+    },
+    "type": [
+      "page",
+      "sorg:AboutPage"
+    ]
+  },
+  "origin": {
+    "id": "https://repository.example.org",
+    "inbox": "https://repository.example.org/coar_notify_inbox/notifications",
+    "type": "Service"
+  },
+  "target": {
+    "id": "https://review.peercommunityin.org",
+    "inbox": "https://review.peercommunityin.org/coar_notify/inbox",
+    "type": "Service"
+  },
+  "type": [
+    "Offer",
+    "coar-notify:ReviewAction"
+  ]
+}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Load (1.0ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-dataset-789"], ["notify_service_id", 1], ["user_id", 1], ["request_type", "request_review"], ["status", "sent"], ["notification_id", nil], ["created_at", "2026-09-12 02:05:10.677399"], ["updated_at", "2026-09-12 02:05:10.677399"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "author@example.org"], ["LIMIT", 1]]
+Hyrax::MessengerService delivery failed: undefined method 'send_message' for an instance of User
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.0ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" ORDER BY "notify_requests"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+OkComputer not installed. Skipping health endpoint at `/healthz`. Add `gem "OkComputer"` to your Gemfile if you want to install default health checks.
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading fedora config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/fedora.yml
+Using the default fedora.yml that comes with active-fedora.  If you want to override this, pass the path to fedora.yml to ActiveFedora - ie. ActiveFedora.init(:fedora_config_path => '/path/to/fedora.yml') - or set Rails.root and put fedora.yml into #{Rails.root}/config.
+ActiveFedora: loading solr config from /home/anusha/Documents/src/coar_notify/hyrax-coar-notify/vendor/bundle/ruby/3.4.0/gems/active-fedora-15.0.1/config/solr.yml
+Hyrax::Engine.after_initialize - unable to persist registered roles.
+It is expected during the application installation - during integration tests, rails install.
+It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'
+  [1m[35m (3.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_services"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_services" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "origin_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_inboxes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_inboxes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "service_url" varchar, "inbox_url" varchar, "api_key" varchar, "target_uris" text, "status" boolean, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "notify_requests"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "notify_requests" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "work_id" varchar NOT NULL, "notify_service_id" integer NOT NULL, "user_id" integer, "request_type" varchar NOT NULL, "status" varchar DEFAULT 'sent' NOT NULL, "notification_id" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_notify_service_id" ON "notify_requests" ("notify_service_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_notify_requests_on_user_id" ON "notify_requests" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '', "encrypted_password" varchar DEFAULT '', "display_name" varchar, "user_key" varchar, "guest" boolean DEFAULT 0, "orcid" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'test', '2026-09-12 02:05:42.235179', '2026-09-12 02:05:42.235182') RETURNING "key"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.318440"], ["updated_at", "2026-09-12 02:05:42.318440"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:42.319486"], ["updated_at", "2026-09-12 02:05:42.319486"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Load (0.0ms)[0m  [1m[34mSELECT "notify_inboxes".* FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyInbox Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_inboxes" WHERE "notify_inboxes"."status" = ? AND "notify_inboxes"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Inbox"], ["service_url", "https://inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.334353"], ["updated_at", "2026-09-12 02:05:42.334353"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyInbox Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_inboxes" ("title", "service_url", "inbox_url", "api_key", "target_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Inbox"], ["service_url", "https://inactive-inbox.org"], ["inbox_url", nil], ["api_key", nil], ["target_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:42.335318"], ["updated_at", "2026-09-12 02:05:42.335318"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.344525"], ["updated_at", "2026-09-12 02:05:42.344525"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Service A"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.398456"], ["updated_at", "2026-09-12 02:05:42.398456"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-123"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:12345"], ["created_at", "2026-09-12 02:05:42.400430"], ["updated_at", "2026-09-12 02:05:42.400430"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."notification_id" IS NOT NULL AND "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.407797"], ["updated_at", "2026-09-12 02:05:42.407797"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:42.411846"], ["updated_at", "2026-09-12 02:05:42.411846"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 1], ["id", 2], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Load (0.0ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."status" = ?[0m  [["status", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyService Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_services" WHERE "notify_services"."status" = ? AND "notify_services"."id" = ? LIMIT ?[0m  [["status", 0], ["id", 2], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Active Service"], ["service_url", "https://service.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.418086"], ["updated_at", "2026-09-12 02:05:42.418086"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Inactive Service"], ["service_url", "https://inactive.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 0], ["created_at", "2026-09-12 02:05:42.418809"], ["updated_at", "2026-09-12 02:05:42.418809"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.8ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "PCI Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/inbox"], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.421191"], ["updated_at", "2026-09-12 02:05:42.421191"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.3ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-valkyrie-101"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:notification-101"], ["created_at", "2026-09-12 02:05:42.424014"], ["updated_at", "2026-09-12 02:05:42.424014"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.1ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."work_id" = ? LIMIT ?[0m  [["work_id", "work-valkyrie-101"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Update (0.1ms)[0m  [1m[33mUPDATE "notify_requests" SET "status" = ?, "updated_at" = ? WHERE "notify_requests"."id" = ?[0m  [["status", "announce_endorsement"], ["updated_at", "2026-09-12 02:05:42.449467"], ["id", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.0ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" WHERE "notify_requests"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.2ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community"], ["service_url", "https://pci.org"], ["inbox_url", nil], ["api_key", nil], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.468632"], ["updated_at", "2026-09-12 02:05:42.468632"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-abc"], ["notify_service_id", 1], ["user_id", nil], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", nil], ["created_at", "2026-09-12 02:05:42.471383"], ["updated_at", "2026-09-12 02:05:42.471383"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-abc"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (3.4ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Community In Evolutionary Biology"], ["service_url", "https://evolbiol.peercommunityin.org"], ["inbox_url", "https://evolbiol.peercommunityin.org/coar_notify/inbox"], ["api_key", "test_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.479289"], ["updated_at", "2026-09-12 02:05:42.479289"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "display_name", "user_key", "guest", "orcid", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "author@example.org"], ["encrypted_password", ""], ["display_name", "Author Name"], ["user_key", nil], ["guest", 0], ["orcid", nil], ["created_at", "2026-09-12 02:05:42.493211"], ["updated_at", "2026-09-12 02:05:42.493211"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-dataset-456"], ["request_type", "request_endorsement"], ["LIMIT", 1]]
+COAR Notify Request Payload:
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://coar-notify.net"
+  ],
+  "id": "urn:uuid:work-dataset-456",
+  "actor": {
+    "id": "mailto:author@example.org",
+    "name": "Author Name",
+    "type": "Person"
+  },
+  "object": {
+    "id": "https://repository.example.org/concern/datasets/work-dataset-456",
+    "ietf:cite-as": "10.1234/example.doi",
+    "ietf:item": {
+      "id": "https://repository.example.org/downloads/fs-123",
+      "mediaType": "application/pdf",
+      "type": [
+        "Article",
+        "sorg:ScholarlyArticle"
+      ]
+    },
+    "type": [
+      "page",
+      "sorg:AboutPage"
+    ]
+  },
+  "origin": {
+    "id": "https://repository.example.org",
+    "inbox": "https://repository.example.org/coar_notify_inbox/notifications",
+    "type": "Service"
+  },
+  "target": {
+    "id": "https://evolbiol.peercommunityin.org",
+    "inbox": "https://evolbiol.peercommunityin.org/coar_notify/inbox",
+    "type": "Service"
+  },
+  "type": [
+    "Offer",
+    "coar-notify:EndorsementAction"
+  ]
+}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Load (0.9ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.0ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-dataset-456"], ["notify_service_id", 1], ["user_id", 1], ["request_type", "request_endorsement"], ["status", "sent"], ["notification_id", "urn:uuid:work-dataset-456"], ["created_at", "2026-09-12 02:05:42.503366"], ["updated_at", "2026-09-12 02:05:42.503366"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "author@example.org"], ["LIMIT", 1]]
+Hyrax::MessengerService delivery failed: undefined method 'send_message' for an instance of User
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.0ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" ORDER BY "notify_requests"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mrollback transaction[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_services" ("title", "service_url", "inbox_url", "api_key", "origin_uris", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Peer Review Service"], ["service_url", "https://review.peercommunityin.org"], ["inbox_url", "https://review.peercommunityin.org/coar_notify/inbox"], ["api_key", "review_token"], ["origin_uris", nil], ["status", 1], ["created_at", "2026-09-12 02:05:42.512927"], ["updated_at", "2026-09-12 02:05:42.512927"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "display_name", "user_key", "guest", "orcid", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["email", "author@example.org"], ["encrypted_password", ""], ["display_name", "Author Name"], ["user_key", nil], ["guest", 0], ["orcid", nil], ["created_at", "2026-09-12 02:05:42.513870"], ["updated_at", "2026-09-12 02:05:42.513870"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "notify_requests" WHERE "notify_requests"."work_id" = ? AND "notify_requests"."request_type" = ? LIMIT ?[0m  [["work_id", "work-dataset-789"], ["request_type", "request_review"], ["LIMIT", 1]]
+COAR Notify Request Payload:
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://coar-notify.net"
+  ],
+  "id": "urn:uuid:work-dataset-789",
+  "actor": {
+    "id": "mailto:author@example.org",
+    "name": "Author Name",
+    "type": "Person"
+  },
+  "object": {
+    "id": "https://repository.example.org/concern/datasets/work-dataset-789",
+    "ietf:cite-as": "10.1234/example.review.doi",
+    "ietf:item": {
+      "id": "https://repository.example.org/downloads/fs-999",
+      "mediaType": "application/pdf",
+      "type": [
+        "Article",
+        "sorg:ScholarlyArticle"
+      ]
+    },
+    "type": [
+      "page",
+      "sorg:AboutPage"
+    ]
+  },
+  "origin": {
+    "id": "https://repository.example.org",
+    "inbox": "https://repository.example.org/coar_notify_inbox/notifications",
+    "type": "Service"
+  },
+  "target": {
+    "id": "https://review.peercommunityin.org",
+    "inbox": "https://review.peercommunityin.org/coar_notify/inbox",
+    "type": "Service"
+  },
+  "type": [
+    "Offer",
+    "coar-notify:ReviewAction"
+  ]
+}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mHyrax::CoarNotify::NotifyService Load (1.0ms)[0m  [1m[34mSELECT "notify_services".* FROM "notify_services" WHERE "notify_services"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mHyrax::CoarNotify::NotifyRequest Create (0.1ms)[0m  [1m[32mINSERT INTO "notify_requests" ("work_id", "notify_service_id", "user_id", "request_type", "status", "notification_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["work_id", "work-dataset-789"], ["notify_service_id", 1], ["user_id", 1], ["request_type", "request_review"], ["status", "sent"], ["notification_id", nil], ["created_at", "2026-09-12 02:05:42.517284"], ["updated_at", "2026-09-12 02:05:42.517284"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "author@example.org"], ["LIMIT", 1]]
+Hyrax::MessengerService delivery failed: undefined method 'send_message' for an instance of User
+  [1m[36mHyrax::CoarNotify::NotifyRequest Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "notify_requests"[0m
+  [1m[36mHyrax::CoarNotify::NotifyRequest Load (0.0ms)[0m  [1m[34mSELECT "notify_requests".* FROM "notify_requests" ORDER BY "notify_requests"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mrollback transaction[0m

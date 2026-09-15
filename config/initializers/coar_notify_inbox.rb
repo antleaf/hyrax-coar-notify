@@ -1,5 +1,0 @@
-module CoarNotifyInboxConfig
-  USE_LOCAL = ENV.fetch('COAR_NOTIFY_USE_LOCAL', 'true') == 'true'
-  BASE_URL = ENV['COAR_NOTIFY_BASE_URL']
-  ADMIN_API_TOKEN = ENV['COAR_NOTIFY_ADMIN_API_TOKEN']
-end

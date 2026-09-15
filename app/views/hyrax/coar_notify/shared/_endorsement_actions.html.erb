@@ -1,0 +1,25 @@
+<% presenter ||= @presenter %>
+<% if presenter.respond_to?(:notify_services) && presenter.notify_services.present? %>
+  <div class="actions d-flex">
+    <div class="dropdown mr-2">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestEndorsementButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= t('coar_notify.actions.request_endorsement', default: 'Request Endorsement') %>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="RequestEndorsementButton">
+        <% presenter.notify_services.each do |service| %>
+          <%= link_to service.title, (defined?(hyrax_coar_notify) ? hyrax_coar_notify.request_endorsement_notify_service_path(service, work_id: presenter.id.to_s) : main_app.request_endorsement_notify_service_path(service, work_id: presenter.id.to_s)), method: :post, class: "dropdown-item" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestReviewButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= t('coar_notify.actions.request_review', default: 'Request Review') %>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="RequestReviewButton">
+        <% presenter.notify_services.each do |service| %>
+          <%= link_to service.title, (defined?(hyrax_coar_notify) ? hyrax_coar_notify.request_review_notify_service_path(service, work_id: presenter.id.to_s) : main_app.request_review_notify_service_path(service, work_id: presenter.id.to_s)), method: :post, class: "dropdown-item" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
