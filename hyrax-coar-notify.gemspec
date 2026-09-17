@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'i18n-tasks', '~> 1.0''
+  spec.add_development_dependency 'i18n-tasks', '~> 1.0'
 end
