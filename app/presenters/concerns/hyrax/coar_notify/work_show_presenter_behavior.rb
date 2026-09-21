@@ -9,6 +9,12 @@ module Hyrax
         @notify_services ||= Hyrax::CoarNotify::NotifyService.active.order(created_at: :desc)
       end
 
+      # Only people who can edit the work may request an endorsement or review.
+      # Fails closed when the including presenter has no #editor? (Hyrax::WorkShowPresenter does).
+      def can_request_notify?
+        respond_to?(:editor?) && editor? ? true : false
+      end
+
       def parsed_endorsements
         if solr_document.respond_to?(:parsed_endorsements)
           solr_document.parsed_endorsements

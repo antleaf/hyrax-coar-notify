@@ -4,6 +4,7 @@ module Hyrax
   module CoarNotify
     class NotifyServicesController < ApplicationController
       before_action :authorize_manager!, except: [:request_endorsement, :request_review]
+      before_action :authorize_work_editor!, only: [:request_endorsement, :request_review]
       before_action :set_notify_service, only: [:edit, :update, :destroy, :request_endorsement, :request_review]
       before_action :check_duplicate_request, only: [:request_endorsement, :request_review]
 
@@ -67,6 +68,27 @@ module Hyrax
       end
 
       private
+
+      # Only someone who can edit the work may request an endorsement or review for it.
+      def authorize_work_editor!
+        work_id = params[:work_id].to_s
+        return if work_id.present? && can_edit_work?(work_id)
+
+        raise CanCan::AccessDenied.new(
+          I18n.t('coar_notify.messages.not_authorized_to_request',
+                 default: 'You are not authorized to request an endorsement or review for this work.'),
+          :edit,
+          work_id
+        )
+      end
+
+      # Hydra::Ability raises RecordNotFound for an id it has no permissions document for; treat
+      # that as "not allowed" so a made-up work id is refused like any other (and its existence isn't revealed).
+      def can_edit_work?(work_id)
+        can?(:edit, work_id)
+      rescue Blacklight::Exceptions::RecordNotFound
+        false
+      end
 
       def set_notify_service
         @notify_service = NotifyService.find(params[:id])

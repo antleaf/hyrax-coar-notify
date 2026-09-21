@@ -30,6 +30,7 @@ en:
       messages_found: Showing latest %{count} messages
       no_messages: No messages found
       not_authorized: You are not authorized to manage Notify connections.
+      not_authorized_to_request: You are not authorized to request an endorsement or review for this work.
       origin: Origin
       service_created: Notify Service created successfully.
       service_deleted: Notify Service deleted successfully.

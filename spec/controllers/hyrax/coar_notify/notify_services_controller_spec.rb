@@ -47,10 +47,85 @@ RSpec.describe Hyrax::CoarNotify::NotifyServicesController, type: :controller do
   end
 
   describe 'request endpoints' do
-    it 'send an anonymous visitor to sign in without queueing anything' do
-      expect { post :request_endorsement, params: { id: service.id, work_id: 'w1' } }
-        .not_to have_enqueued_job
-      expect(response).to redirect_to('http://test.host/users/sign_in')
+    let(:user) { User.create!(email: 'depositor@example.com') }
+    let(:sign_in_url) { 'http://test.host/users/sign_in' }
+    let(:root_url) { 'http://test.host/' }
+    let(:refusal) { 'You are not authorized to request an endorsement or review for this work.' }
+
+    # An ability that lets the user edit exactly one work, like a depositor's.
+    let(:editor_ability) do
+      Object.new.extend(CanCan::Ability).tap { |a| a.can(:edit, String) { |id| id == 'my-work' } }
+    end
+
+    {
+      request_endorsement: Hyrax::CoarNotify::RequestEndorsementJob,
+      request_review: Hyrax::CoarNotify::RequestReviewJob
+    }.each do |action, job|
+      describe action.to_s do
+        def request_for(action, work_id)
+          post action, params: { id: service.id, work_id: work_id }
+        end
+
+        it 'sends an anonymous visitor to sign in without queueing anything' do
+          expect { request_for(action, 'my-work') }.not_to have_enqueued_job
+          expect(response).to redirect_to(sign_in_url)
+        end
+
+        context 'when signed in' do
+          before { allow(controller).to receive(:current_user).and_return(user) }
+
+          it 'refuses a user who cannot edit the work, without queueing anything' do
+            allow(controller).to receive(:current_ability).and_return(editor_ability)
+            expect { request_for(action, 'someone-elses-work') }.not_to have_enqueued_job
+            expect(response).to redirect_to(root_url)
+            expect(flash[:alert]).to eq(refusal)
+          end
+
+          it 'refuses a user with no abilities at all' do
+            expect { request_for(action, 'my-work') }.not_to have_enqueued_job
+            expect(flash[:alert]).to eq(refusal)
+          end
+
+          it 'refuses a request with no work id' do
+            allow(controller).to receive(:current_ability).and_return(editor_ability)
+            expect { request_for(action, nil) }.not_to have_enqueued_job
+            expect(flash[:alert]).to eq(refusal)
+          end
+
+          it 'refuses, rather than erroring, when the ability has no permissions document for the work id' do
+            ability = Object.new.extend(CanCan::Ability)
+            allow(ability).to receive(:can?).and_raise(Blacklight::Exceptions::RecordNotFound)
+            allow(controller).to receive(:current_ability).and_return(ability)
+            expect { request_for(action, 'no-such-work') }.not_to have_enqueued_job
+            expect(response).to redirect_to(root_url)
+            expect(flash[:alert]).to eq(refusal)
+          end
+
+          it 'does not reveal an existing request to a user who cannot edit the work' do
+            Hyrax::CoarNotify::NotifyRequest.create!(work_id: 'someone-elses-work', notify_service: service,
+                                                     request_type: action.to_s, status: 'sent')
+            allow(controller).to receive(:current_ability).and_return(editor_ability)
+            request_for(action, 'someone-elses-work')
+            expect(flash[:alert]).to eq(refusal)
+          end
+
+          it 'queues the job for a user who can edit the work' do
+            allow(controller).to receive(:current_ability).and_return(editor_ability)
+            expect { request_for(action, 'my-work') }
+              .to have_enqueued_job(job).with(work_id: 'my-work', service_id: service.id, user_id: user.id)
+            expect(flash[:alert]).to be_nil
+            expect(flash[:notice]).to be_present
+          end
+
+          it 'still rejects a duplicate request from an editor' do
+            Hyrax::CoarNotify::NotifyRequest.create!(work_id: 'my-work', notify_service: service,
+                                                     request_type: action.to_s, status: 'sent')
+            allow(controller).to receive(:current_ability).and_return(editor_ability)
+            expect { request_for(action, 'my-work') }.not_to have_enqueued_job
+            expect(flash[:alert]).to include('already been submitted')
+          end
+        end
+      end
     end
   end
 end

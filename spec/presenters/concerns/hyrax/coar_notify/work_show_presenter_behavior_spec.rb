@@ -33,4 +33,20 @@ RSpec.describe Hyrax::CoarNotify::WorkShowPresenterBehavior do
     expect(presenter.has_endorsement?).to be true
     expect(presenter.has_review?).to be true
   end
+
+  describe '#can_request_notify?' do
+    it 'is true when the presenter says the viewer can edit' do
+      editor_class = Class.new(dummy_presenter_class) { def editor? = true }
+      expect(editor_class.new(dummy_solr_doc).can_request_notify?).to be true
+    end
+
+    it 'is false when the viewer cannot edit' do
+      viewer_class = Class.new(dummy_presenter_class) { def editor? = false }
+      expect(viewer_class.new(dummy_solr_doc).can_request_notify?).to be false
+    end
+
+    it 'fails closed when the presenter has no #editor?' do
+      expect(presenter.can_request_notify?).to be false
+    end
+  end
 end
