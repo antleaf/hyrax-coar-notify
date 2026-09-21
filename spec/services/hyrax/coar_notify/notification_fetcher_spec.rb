@@ -137,4 +137,99 @@ RSpec.describe Hyrax::CoarNotify::NotificationFetcher do
       expect { described_class.new.call }.to raise_error(/expected a list/)
     end
   end
+
+  describe '#call recording endorsements and reviews on the work' do
+    let(:inbox) { 'https://repository.example.org/coar_notify_inbox/notifications' }
+    let(:work_class) { Struct.new(:id, :endorsements, :reviews, :has_endorsement, :has_review) }
+    let(:work) { work_class.new('work-valkyrie-101', [], [], false, false) }
+    let(:persister) { double('persister') }
+    let(:index_adapter) { double('index adapter', save: nil) }
+
+    def announcement(kind, provider: 'https://pci.example.org', url: 'https://pci.example.org/e/1')
+      { 'id' => "urn:uuid:#{kind}-#{provider}-#{url}",
+        'raw_payload' => { 'type' => ['Announce', "coar-notify:#{kind}Action"],
+                           'origin' => { 'id' => provider },
+                           'context' => { 'id' => 'https://repository.example.org/concern/datasets/work-valkyrie-101' },
+                           'object' => { 'id' => url } } }
+    end
+
+    def serve(*notifications)
+      stub_request(:get, inbox).to_return(status: 200, body: notifications.to_json, headers: { 'Content-Type' => 'application/json' })
+    end
+
+    def fetch
+      described_class.new.call
+    end
+
+    before do
+      allow(Hyrax.query_service).to receive(:find_by).with(id: 'work-valkyrie-101').and_return(work)
+      allow(persister).to receive(:save) { |resource:| resource }
+      allow(Hyrax).to receive(:persister).and_return(persister)
+      allow(Hyrax).to receive(:index_adapter).and_return(index_adapter)
+    end
+
+    it 'records an endorsement, flags the work, then saves and indexes it' do
+      serve(announcement('Endorsement'))
+      fetch
+      expect(work.endorsements.map { |e| JSON.parse(e) })
+        .to eq([{ 'service_provider' => 'https://pci.example.org', 'endorsement_url' => 'https://pci.example.org/e/1' }])
+      expect(work.has_endorsement).to be true
+      expect(persister).to have_received(:save).once
+      expect(index_adapter).to have_received(:save).once
+    end
+
+    it 'does not record the same endorsement again when the inbox serves it on a later run' do
+      serve(announcement('Endorsement'))
+      fetch
+      fetch
+      fetch
+      expect(work.endorsements.size).to eq(1)
+      expect(persister).to have_received(:save).once
+      expect(index_adapter).to have_received(:save).once
+    end
+
+    it 'records it once when the same notification appears twice in one response' do
+      serve(announcement('Endorsement'), announcement('Endorsement'))
+      fetch
+      expect(work.endorsements.size).to eq(1)
+    end
+
+    it 'records a different endorsement from the same provider' do
+      serve(announcement('Endorsement', url: 'https://pci.example.org/e/1'), announcement('Endorsement', url: 'https://pci.example.org/e/2'))
+      fetch
+      expect(work.endorsements.size).to eq(2)
+    end
+
+    it 'records the same URL when it comes from a different provider' do
+      serve(announcement('Endorsement', provider: 'https://a.example.org'), announcement('Endorsement', provider: 'https://b.example.org'))
+      fetch
+      expect(work.endorsements.size).to eq(2)
+    end
+
+    it 'recognises an entry already on the work however its JSON was written' do
+      work.endorsements = ['{"endorsement_url": "https://pci.example.org/e/1", "service_provider": "https://pci.example.org"}']
+      serve(announcement('Endorsement'))
+      fetch
+      expect(work.endorsements.size).to eq(1)
+      expect(persister).not_to have_received(:save)
+    end
+
+    it 'ignores entries on the work that are not valid JSON, and still records the new one' do
+      work.endorsements = ['not json']
+      serve(announcement('Endorsement'))
+      expect { fetch }.not_to raise_error
+      expect(work.endorsements.size).to eq(2)
+    end
+
+    it 'does the same for reviews, leaving endorsements alone' do
+      serve(announcement('Review', url: 'https://pci.example.org/r/1'))
+      fetch
+      fetch
+      expect(work.reviews.map { |r| JSON.parse(r) })
+        .to eq([{ 'service_provider' => 'https://pci.example.org', 'review_url' => 'https://pci.example.org/r/1' }])
+      expect(work.has_review).to be true
+      expect(work.endorsements).to eq([])
+      expect(persister).to have_received(:save).once
+    end
+  end
 end

@@ -60,32 +60,41 @@ module Hyrax
           return unless work
 
           service_provider = notification.dig("raw_payload", "origin", "id")
+          object_url = notification.dig("raw_payload", "object", "id")
 
-          if status == "Announced Endorsement" || status == "announce_endorsement"
-            endorsement = {
-              service_provider: service_provider,
-              endorsement_url: notification.dig("raw_payload", "object", "id")
-            }
-            endorsements_list = Array(work.endorsements).dup
-            endorsements_list << endorsement.to_json
-            work.endorsements = endorsements_list if work.respond_to?(:endorsements=)
-            work.has_endorsement = true if work.respond_to?(:has_endorsement=)
-          else
-            review = {
-              service_provider: service_provider,
-              review_url: notification.dig("raw_payload", "object", "id")
-            }
-            reviews_list = Array(work.reviews).dup
-            reviews_list << review.to_json
-            work.reviews = reviews_list if work.respond_to?(:reviews=)
-            work.has_review = true if work.respond_to?(:has_review=)
-          end
+          changed =
+            if status == "Announced Endorsement" || status == "announce_endorsement"
+              add_entry(work, :endorsements, :has_endorsement, service_provider: service_provider, endorsement_url: object_url)
+            else
+              add_entry(work, :reviews, :has_review, service_provider: service_provider, review_url: object_url)
+            end
+          # Already recorded (the inbox served this notification again): nothing to save.
+          return unless changed
 
           if defined?(Hyrax.persister)
             updated_work = Hyrax.persister.save(resource: work)
             Hyrax.index_adapter.save(resource: updated_work) if defined?(Hyrax.index_adapter)
           end
         end
+      end
+
+      # Records an endorsement/review on the work unless the same one (same provider and URL) is already
+      # there, so processing a notification again does not add it twice. Returns whether the work changed.
+      def add_entry(work, list_attribute, flag_attribute, entry)
+        current = Array(work.public_send(list_attribute))
+        return false if current.any? { |existing| same_entry?(existing, entry) }
+
+        work.public_send("#{list_attribute}=", current.dup << entry.to_json) if work.respond_to?("#{list_attribute}=")
+        work.public_send("#{flag_attribute}=", true) if work.respond_to?("#{flag_attribute}=")
+        true
+      end
+
+      # Entries are stored as JSON strings; an entry that isn't valid JSON can't match anything.
+      def same_entry?(existing, entry)
+        existing = JSON.parse(existing) if existing.is_a?(String)
+        existing.is_a?(Hash) && existing.stringify_keys.slice(*entry.keys.map(&:to_s)) == entry.stringify_keys
+      rescue JSON::ParserError
+        false
       end
     end
   end
