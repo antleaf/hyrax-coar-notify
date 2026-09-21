@@ -29,6 +29,7 @@ en:
       inbox_updated: Inbox updated successfully.
       messages_found: Showing latest %{count} messages
       no_messages: No messages found
+      not_authorized: You are not authorized to manage Notify connections.
       origin: Origin
       service_created: Notify Service created successfully.
       service_deleted: Notify Service deleted successfully.

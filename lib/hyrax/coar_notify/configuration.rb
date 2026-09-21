@@ -8,7 +8,8 @@ module Hyrax
                     :use_local,
                     :inbox_url,
                     :default_origin_inbox,
-                    :fetch_schedule
+                    :fetch_schedule,
+                    :manager_role
 
       def initialize
         @use_local = ENV.fetch('COAR_NOTIFY_USE_LOCAL', 'true') == 'true'
@@ -17,6 +18,7 @@ module Hyrax
         @inbox_url = ENV['COAR_NOTIFY_INBOX_URL']
         @default_origin_inbox = ENV['COAR_NOTIFY_DEFAULT_ORIGIN_INBOX']
         @fetch_schedule = '*/5 * * * *'
+      @manager_role = ENV.fetch('NOTIFY_MANAGER_ROLE', 'admin')
       end
     end
   end

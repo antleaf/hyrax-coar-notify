@@ -3,7 +3,7 @@
 module Hyrax
   module CoarNotify
     class NotifyServicesController < ApplicationController
-      before_action :authorize_admin!, except: [:request_endorsement, :request_review]
+      before_action :authorize_manager!, except: [:request_endorsement, :request_review]
       before_action :set_notify_service, only: [:edit, :update, :destroy, :request_endorsement, :request_review]
       before_action :check_duplicate_request, only: [:request_endorsement, :request_review]
 
@@ -70,18 +70,6 @@ module Hyrax
 
       def set_notify_service
         @notify_service = NotifyService.find(params[:id])
-      end
-
-      def authorize_admin!
-        if respond_to?(:authorize!)
-          begin
-            authorize! :manage, NotifyService
-          rescue CanCan::AccessDenied, StandardError
-            authorize! :read, :admin_dashboard rescue nil
-          end
-        elsif respond_to?(:authenticate_user!)
-          authenticate_user!
-        end
       end
 
       def check_duplicate_request
