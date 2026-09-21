@@ -3,6 +3,10 @@
 module Hyrax
   module CoarNotify
     class NotifyRequestLogger
+      # Statuses an incoming notification may put a request into: replies to a request (COAR Notify
+      # Accept / Reject / TentativeAccept / TentativeReject), as opposed to "sent", which only we set.
+      REPLY_STATUSES = %w[accept tentative_accept reject tentative_reject].freeze
+
       def self.duplicate_request?(work_id:, request_type:)
         NotifyRequest.where(work_id: work_id.to_s, request_type: request_type).exists?
       end
@@ -20,6 +24,12 @@ module Hyrax
 
       def self.create_or_update_requests_for_notification(notification)
         status = notification_status(notification)
+        if status.nil?
+          Rails.logger.warn("COAR Notify: ignoring notification #{notification_label(notification)} of unsupported type " \
+                            "#{notification.dig('raw_payload', 'type').inspect}")
+          return
+        end
+
         work_id = work_id_from(notification, status)
         return if work_id.blank?
 
@@ -49,14 +59,27 @@ module Hyrax
         identifier
       end
 
+      # The status a notification puts its request into, or nil when the notification is of a type this
+      # gem does not handle (for example Announce Relationship), so callers can skip it.
       def self.notification_status(notification)
-        notification_type = notification.dig("raw_payload", "type")
+        type = notification.dig("raw_payload", "type")
 
-        if notification_type.is_a?(Array)
-          notification_type[1].to_s.include?("EndorsementAction") ? "announce_endorsement" : "announce_review"
+        if type.is_a?(Array)
+          types = type.map(&:to_s)
+          return "announce_endorsement" if types.any? { |t| t.include?("EndorsementAction") }
+          return "announce_review" if types.any? { |t| t.include?("ReviewAction") }
+
+          nil
         else
-          notification_type.to_s.underscore
+          status = type.to_s.underscore
+          status if REPLY_STATUSES.include?(status)
         end
+      end
+
+      def self.notification_label(notification)
+        return notification.to_s[0, 80] unless notification.is_a?(Hash)
+
+        (notification["id"] || notification.dig("raw_payload", "id")).to_s
       end
     end
   end

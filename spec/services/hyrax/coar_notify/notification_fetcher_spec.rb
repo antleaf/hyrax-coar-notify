@@ -70,4 +70,71 @@ RSpec.describe Hyrax::CoarNotify::NotificationFetcher do
       expect(notify_request.status).to eq('Announced Endorsement')
     end
   end
+
+  describe '#call with a mixed inbox' do
+    let(:inbox) { 'https://repository.example.org/coar_notify_inbox/notifications' }
+    let(:accept) do
+      { 'id' => 'urn:uuid:accept-1',
+        'raw_payload' => { 'type' => 'Accept',
+                           'object' => { 'object' => { 'id' => 'https://repository.example.org/concern/datasets/work-valkyrie-101' } } } }
+    end
+    let(:relationship) do
+      { 'id' => 'urn:uuid:relationship-1',
+        'raw_payload' => { 'type' => ['Announce', 'coar-notify:RelationshipAction'],
+                           'context' => { 'id' => 'https://repository.example.org/concern/datasets/work-valkyrie-101' },
+                           'object' => { 'id' => 'https://other.example.org/x' } } }
+    end
+
+    def serve(body)
+      stub_request(:get, inbox).to_return(status: 200, body: body.to_json, headers: { 'Content-Type' => 'application/json' })
+    end
+
+    before do
+      allow(Rails.logger).to receive(:error)
+      allow(Rails.logger).to receive(:warn)
+    end
+
+    it 'records an Accept without raising' do
+      serve([accept])
+      expect { described_class.new.call }.not_to raise_error
+      expect(notify_request.reload.status).to eq('Accepted')
+    end
+
+    it 'skips an unsupported notification without changing the request' do
+      serve([relationship])
+      expect { described_class.new.call }.not_to raise_error
+      expect(notify_request.reload.status).to eq('Sent')
+    end
+
+    it 'logs a notification it cannot process and still processes the ones after it' do
+      serve(['not a notification', nil, accept])
+      expect { described_class.new.call }.not_to raise_error
+      expect(notify_request.reload.status).to eq('Accepted')
+      expect(Rails.logger).to have_received(:error).twice
+    end
+
+    it 'keeps going when processing one notification raises' do
+      serve([accept, accept.merge('id' => 'urn:uuid:accept-2')])
+      calls = 0
+      allow(Hyrax::CoarNotify::NotifyRequestLogger).to receive(:create_or_update_requests_for_notification).and_wrap_original do |m, n|
+        calls += 1
+        raise 'boom' if calls == 1
+
+        m.call(n)
+      end
+      expect { described_class.new.call }.not_to raise_error
+      expect(notify_request.reload.status).to eq('Accepted')
+      expect(Rails.logger).to have_received(:error).with(/skipped notification urn:uuid:accept-1: RuntimeError: boom/)
+    end
+
+    it 'still fails the whole run when the inbox cannot be read' do
+      stub_request(:get, inbox).to_return(status: 500)
+      expect { described_class.new.call }.to raise_error(/Failed to fetch notifications/)
+    end
+
+    it 'fails the run when the inbox does not return a list' do
+      serve('error' => 'nope')
+      expect { described_class.new.call }.to raise_error(/expected a list/)
+    end
+  end
 end
