@@ -3,7 +3,7 @@
 module Hyrax
   module CoarNotify
     class NotifyInboxesController < ApplicationController
-      before_action :authorize_admin!
+      before_action :authorize_manager!
       before_action :set_notify_inbox, only: [:edit, :update, :destroy]
 
       def index
@@ -51,18 +51,6 @@ module Hyrax
 
       def set_notify_inbox
         @notify_inbox = NotifyInbox.find(params[:id])
-      end
-
-      def authorize_admin!
-        if respond_to?(:authorize!)
-          begin
-            authorize! :manage, NotifyInbox
-          rescue CanCan::AccessDenied, StandardError
-            authorize! :read, :admin_dashboard rescue nil
-          end
-        elsif respond_to?(:authenticate_user!)
-          authenticate_user!
-        end
       end
 
       def notify_inbox_params

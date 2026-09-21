@@ -13,6 +13,10 @@ Hyrax::CoarNotify.configure do |config|
   # Whether to use local inbox handling
   config.use_local = ENV.fetch('COAR_NOTIFY_USE_LOCAL', 'true') == 'true'
 
+  # Admins, users holding this role, and anyone your Ability grants `can :access, :coar_notify`
+  # may open the Notify dashboard and manage connections. Everyone else is refused.
+  # config.manager_role = ENV.fetch('NOTIFY_MANAGER_ROLE', 'admin')
+
   # Cron schedule for the notifications fetcher background job
   # config.fetch_schedule = '*/5 * * * *'
 end

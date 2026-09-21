@@ -11,3 +11,14 @@ The document [wireframes.pdf](docs/Wireframes.pdf)  created as a part of the des
 
 The document [Hyrax Notify with external inbox](docs/Hyrax%20Notify%20with%20external%20inbox.md) details how Hyrax Notify is to be used to send and receive Notify notifications, when configured with an external inbox.
 
+
+
+## Access control
+
+Every page of the engine requires a signed-in user (the host's `authenticate_user!`). The Notify dashboard and the pages for managing services and inboxes are then limited to:
+
+- admins (`Ability#admin?` or `User#admin?`),
+- users holding the role named by `Hyrax::CoarNotify.config.manager_role` (default `admin`, set with the `NOTIFY_MANAGER_ROLE` environment variable), and
+- anyone your `Ability` grants `can :access, :coar_notify`.
+
+Everyone else is redirected to the home page with an alert, and anonymous visitors are sent to sign in. A user's roles are read from `current_user.groups`, as provided by hydra-role-management.
