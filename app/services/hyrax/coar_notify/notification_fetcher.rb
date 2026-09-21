@@ -21,8 +21,14 @@ module Hyrax
         raise "Failed to fetch notifications" unless response.success?
 
         notifications = JSON.parse(response.body)
+        raise "Unexpected notifications response from #{inbox_url}: expected a list" unless notifications.is_a?(Array)
+
         notifications.each do |notification|
           save_notification_and_process_relationships(notification)
+        rescue StandardError => e
+          # One bad notification must not stop the ones after it from being processed.
+          Rails.logger.error("COAR Notify: skipped notification #{NotifyRequestLogger.notification_label(notification)}: " \
+                             "#{e.class}: #{e.message}")
         end
       end
 
