@@ -65,4 +65,36 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
       expect(logged_request.status).to eq('Sent')
     end
   end
+
+  describe 'the request id' do
+    let(:other_work) do
+      double('OtherWork', id: 'work-dataset-other', doi: '10.1234/other', identifier: ['10.1234/other'],
+                          depositor: 'author@example.org', class: double('WorkClass', to_s: 'Dataset'))
+    end
+    let(:inbox) { service.inbox_url }
+
+    before do
+      allow(Hyrax.query_service).to receive(:find_members).with(resource: other_work).and_return([file_set])
+      stub_request(:post, inbox).to_return(status: 201, body: '{}')
+    end
+
+    def sent_ids
+      WebMock::RequestRegistry.instance.requested_signatures.hash.keys.map { |sig| JSON.parse(sig.body)['id'] }
+    end
+
+    it 'sends a fresh urn:uuid id with each request and stores exactly that id' do
+      described_class.new(work: work, target: service, user: user).call
+      described_class.new(work: other_work, target: service, user: user).call
+
+      stored = Hyrax::CoarNotify::NotifyRequest.order(:id).pluck(:notification_id)
+      expect(stored).to all(match(/\Aurn:uuid:\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/))
+      expect(stored.uniq.size).to eq(2)
+      expect(sent_ids).to match_array(stored)
+    end
+
+    it 'does not derive the id from the work, so it cannot collide with another kind of request' do
+      described_class.new(work: work, target: service, user: user).call
+      expect(Hyrax::CoarNotify::NotifyRequest.last.notification_id).not_to include(work.id)
+    end
+  end
 end

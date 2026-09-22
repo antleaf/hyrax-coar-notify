@@ -222,6 +222,8 @@ RSpec.describe Hyrax::CoarNotify::NotificationFetcher do
     end
 
     it 'does the same for reviews, leaving endorsements alone' do
+      Hyrax::CoarNotify::NotifyRequest.create!(work_id: 'work-valkyrie-101', notify_service: service, request_type: 'request_review',
+                                               status: 'sent')
       serve(announcement('Review', url: 'https://pci.example.org/r/1'))
       fetch
       fetch
@@ -230,6 +232,32 @@ RSpec.describe Hyrax::CoarNotify::NotificationFetcher do
       expect(work.has_review).to be true
       expect(work.endorsements).to eq([])
       expect(persister).to have_received(:save).once
+    end
+  end
+
+  describe '#call answering two requests for the same work' do
+    let(:inbox) { 'https://repository.example.org/coar_notify_inbox/notifications' }
+    let(:work_url) { 'https://repository.example.org/concern/datasets/work-valkyrie-101' }
+    let!(:review_request) do
+      Hyrax::CoarNotify::NotifyRequest.create!(work_id: 'work-valkyrie-101', notify_service: service, request_type: 'request_review',
+                                               status: 'sent', notification_id: 'urn:uuid:review-1')
+    end
+
+    def accept(in_reply_to, action)
+      { 'id' => "accept-#{in_reply_to}",
+        'raw_payload' => { 'type' => 'Accept', 'inReplyTo' => in_reply_to,
+                           'object' => { 'id' => in_reply_to, 'type' => ['Offer', action], 'object' => { 'id' => work_url } } } }
+    end
+
+    it 'updates each request from the reply that names it' do
+      stub_request(:get, inbox).to_return(
+        status: 200, headers: { 'Content-Type' => 'application/json' },
+        body: [accept('urn:uuid:review-1', 'coar-notify:ReviewAction'),
+               accept('urn:uuid:notification-101', 'coar-notify:EndorsementAction').deep_merge('raw_payload' => { 'type' => 'Reject' })].to_json
+      )
+      described_class.new.call
+      expect(review_request.reload.status).to eq('Accepted')
+      expect(notify_request.reload.status).to eq('Rejected')
     end
   end
 end

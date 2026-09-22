@@ -85,4 +85,121 @@ RSpec.describe Hyrax::CoarNotify::NotifyRequestLogger do
       expect(Rails.logger).to have_received(:warn).with(/ignoring notification n-1 of unsupported type "Offer"/)
     end
   end
+
+  describe 'matching a notification to the right request' do
+    let(:work_url) { 'https://repo.test/concern/datasets/work-1' }
+
+    def make_request(type, id: nil, status: 'sent', work: 'work-1')
+      Hyrax::CoarNotify::NotifyRequest.create!(work_id: work, notify_service: service, request_type: type, status: status,
+                                               notification_id: id)
+    end
+
+    def apply(payload)
+      described_class.create_or_update_requests_for_notification('id' => 'n-1', 'raw_payload' => payload)
+    end
+
+    def reply(type, in_reply_to: nil, action: nil, object_id: in_reply_to)
+      payload = { 'type' => type,
+                  'object' => { 'id' => object_id, 'type' => ['Offer', action].compact,
+                                'object' => { 'id' => work_url } } }
+      payload['inReplyTo'] = in_reply_to if in_reply_to
+      payload
+    end
+
+    def announcement(action, in_reply_to: nil)
+      payload = { 'type' => ['Announce', "coar-notify:#{action}"], 'context' => { 'id' => work_url },
+                  'object' => { 'id' => 'https://pci.test/x' } }
+      payload['inReplyTo'] = in_reply_to if in_reply_to
+      payload
+    end
+
+    context 'when a work has both an endorsement and a review request pending' do
+      # Created review-first, so the old find_by(work_id:) would have picked the review row.
+      let!(:review) { make_request('request_review', id: 'urn:uuid:review-1') }
+      let!(:endorsement) { make_request('request_endorsement', id: 'urn:uuid:endorse-1') }
+
+      it 'updates the request a reply names, whichever kind that is' do
+        apply(reply('Accept', in_reply_to: 'urn:uuid:review-1', action: 'coar-notify:ReviewAction'))
+        expect(review.reload.status).to eq('Accepted')
+        expect(endorsement.reload.status).to eq('Sent')
+
+        apply(reply('Reject', in_reply_to: 'urn:uuid:endorse-1', action: 'coar-notify:EndorsementAction'))
+        expect(endorsement.reload.status).to eq('Rejected')
+        expect(review.reload.status).to eq('Accepted')
+      end
+
+      it 'updates only the review for an announced review' do
+        apply(announcement('ReviewAction', in_reply_to: 'urn:uuid:review-1'))
+        expect(review.reload.status).to eq('Announced Review')
+        expect(endorsement.reload.status).to eq('Sent')
+      end
+
+      it 'updates only the endorsement for an announced endorsement that names no request' do
+        apply(announcement('EndorsementAction'))
+        expect(endorsement.reload.status).to eq('Announced Endorsement')
+        expect(review.reload.status).to eq('Sent')
+      end
+
+      it 'uses the kind repeated in a reply when it names no request' do
+        apply(reply('TentativeAccept', action: 'coar-notify:ReviewAction'))
+        expect(review.reload.status).to eq('Tentatively Accepted')
+        expect(endorsement.reload.status).to eq('Sent')
+      end
+
+      it 'falls back to work and kind when the id it replies to is not one of ours' do
+        apply(announcement('EndorsementAction', in_reply_to: 'urn:uuid:someone-elses'))
+        expect(endorsement.reload.status).to eq('Announced Endorsement')
+        expect(review.reload.status).to eq('Sent')
+      end
+
+      it 'does not let an id from the other kind of request win' do
+        apply(announcement('ReviewAction', in_reply_to: 'urn:uuid:endorse-1'))
+        expect(review.reload.status).to eq('Announced Review')
+        expect(endorsement.reload.status).to eq('Sent')
+      end
+    end
+
+    it 'picks the exact request named, even when a newer one exists for the same work' do
+      older = make_request('request_endorsement', id: 'urn:uuid:old')
+      newer = make_request('request_endorsement', id: 'urn:uuid:new')
+      apply(reply('Reject', in_reply_to: 'urn:uuid:old', action: 'coar-notify:EndorsementAction'))
+      expect(older.reload.status).to eq('Rejected')
+      expect(newer.reload.status).to eq('Sent')
+    end
+
+    it 'prefers the newest request still waiting for an answer when the reply says nothing else' do
+      waiting = make_request('request_endorsement', id: 'urn:uuid:a')
+      answered = make_request('request_review', id: 'urn:uuid:b', status: 'reject')
+      apply(reply('Accept'))
+      expect(waiting.reload.status).to eq('Accepted')
+      expect(answered.reload.status).to eq('Rejected')
+    end
+
+    it 'still updates the newest request when none is waiting' do
+      make_request('request_endorsement', id: 'urn:uuid:a', status: 'reject')
+      newest = make_request('request_review', id: 'urn:uuid:b', status: 'reject')
+      apply(reply('Accept'))
+      expect(newest.reload.status).to eq('Accepted')
+    end
+
+    it 'matches requests sent before ids were unique (blank id, or one id shared by both kinds)' do
+      endorsement = make_request('request_endorsement', id: 'urn:uuid:work-1')
+      review = make_request('request_review', id: nil)
+      apply(announcement('ReviewAction', in_reply_to: 'urn:uuid:work-1'))
+      expect(review.reload.status).to eq('Announced Review')
+      expect(endorsement.reload.status).to eq('Sent')
+    end
+
+    it 'ignores, and logs, an announcement when no request of that kind exists for the work' do
+      endorsement = make_request('request_endorsement', id: 'urn:uuid:endorse-1')
+      allow(Rails.logger).to receive(:info)
+      expect(apply(announcement('ReviewAction'))).to be_nil
+      expect(endorsement.reload.status).to eq('Sent')
+      expect(Rails.logger).to have_received(:info).with(/no request matches notification n-1/)
+    end
+
+    it 'ignores a reply for a work we never sent a request for' do
+      expect(apply(reply('Accept', in_reply_to: 'urn:uuid:unknown'))).to be_nil
+    end
+  end
 end

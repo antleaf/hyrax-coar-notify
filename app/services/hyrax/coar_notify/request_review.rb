@@ -40,7 +40,7 @@ module Hyrax
           user: user,
           request_type: request_type,
           status: "sent",
-          notification_id: request_payload["id"]
+          notification_id: notification_id
         )
 
         notify_success(response)
@@ -59,7 +59,7 @@ module Hyrax
       def build_payload
         {
           "@context": %w[https://www.w3.org/ns/activitystreams https://coar-notify.net],
-          "id": "urn:uuid:#{work.id}",
+          "id": notification_id,
           "actor": {
             "id": "mailto:#{user.email}",
             "name": user.respond_to?(:display_name) ? user.display_name : user.email,
@@ -83,6 +83,12 @@ module Hyrax
           },
           "type": %w[Offer coar-notify:ReviewAction]
         }
+      end
+
+      # A fresh id for every request, sent as the notification's id and stored on the NotifyRequest:
+      # a reply names it in `inReplyTo`, which is how the reply is matched back to this request.
+      def notification_id
+        @notification_id ||= "urn:uuid:#{SecureRandom.uuid}"
       end
 
       def origin_inbox_url
