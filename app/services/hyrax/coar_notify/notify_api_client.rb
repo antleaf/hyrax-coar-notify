@@ -24,6 +24,16 @@ module Hyrax
         nil
       end
 
+      # Whether a #sync_notify_service response means the consumer is registered: a 2xx does, and so
+      # does a 409 (coar_notify_inbox's own "Consumer already exists" reply to a repeat registration,
+      # e.g. from editing the service again) - anything else, including nil (the inbox couldn't be
+      # reached at all), does not.
+      def self.sync_successful?(response)
+        return false if response.nil?
+
+        response.success? || response.status == 409
+      end
+
       def self.consumer_payload(notify_service)
         payload = {
           target_uri: application_url,

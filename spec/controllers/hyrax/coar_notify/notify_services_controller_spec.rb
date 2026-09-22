@@ -12,7 +12,9 @@ RSpec.describe Hyrax::CoarNotify::NotifyServicesController, type: :controller do
   end
   let(:new_attrs) { { title: 'New', service_url: 'http://new.test', inbox_url: 'http://new.test/inbox', api_key: 'k', status: true } }
 
-  before { allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service) }
+  let(:successful_sync_response) { instance_double(Faraday::Response, success?: true, status: 201) }
+
+  before { allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service).and_return(successful_sync_response) }
 
   it_behaves_like 'manager-only actions',
                   'GET index' => -> { get :index },
@@ -21,6 +23,51 @@ RSpec.describe Hyrax::CoarNotify::NotifyServicesController, type: :controller do
                   'POST create' => -> { post :create, params: { notify_service: new_attrs } },
                   'PATCH update' => -> { patch :update, params: { id: service.id, notify_service: { title: 'Changed' } } },
                   'DELETE destroy' => -> { delete :destroy, params: { id: service.id } }
+
+  context 'registering with the external inbox' do
+    let(:admin) { User.create!(email: 'admin@example.com', admin: true) }
+    let(:failed_sync_response) { instance_double(Faraday::Response, success?: false, status: 422) }
+    let(:already_registered_response) { instance_double(Faraday::Response, success?: false, status: 409) }
+
+    before { allow(controller).to receive(:current_user).and_return(admin) }
+
+    it 'saves the service and reports only success when the inbox accepts the registration' do
+      post :create, params: { notify_service: new_attrs }
+      expect(Hyrax::CoarNotify::NotifyService.find_by(title: 'New')).to be_present
+      expect(flash[:notice]).to eq('Notify Service created successfully.')
+      expect(flash[:alert]).to be_nil
+    end
+
+    it 'still saves the service, but also warns, when the inbox refuses the registration' do
+      allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service).and_return(failed_sync_response)
+      post :create, params: { notify_service: new_attrs }
+      expect(Hyrax::CoarNotify::NotifyService.find_by(title: 'New')).to be_present
+      expect(flash[:notice]).to eq('Notify Service created successfully.')
+      expect(flash[:alert]).to include('registering it with the external inbox failed')
+    end
+
+    it 'still saves the service, but also warns, when the inbox cannot be reached at all' do
+      allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service).and_return(nil)
+      post :create, params: { notify_service: new_attrs }
+      expect(Hyrax::CoarNotify::NotifyService.find_by(title: 'New')).to be_present
+      expect(flash[:alert]).to include('registering it with the external inbox failed')
+    end
+
+    it 'does not warn when the inbox reports the consumer as already registered' do
+      allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service).and_return(already_registered_response)
+      patch :update, params: { id: service.id, notify_service: { title: 'Changed' } }
+      expect(service.reload.title).to eq('Changed')
+      expect(flash[:notice]).to eq('Notify Service updated successfully.')
+      expect(flash[:alert]).to be_nil
+    end
+
+    it 'warns on update too, without undoing the change' do
+      allow(Hyrax::CoarNotify::NotifyAPIClient).to receive(:sync_notify_service).and_return(failed_sync_response)
+      patch :update, params: { id: service.id, notify_service: { title: 'Changed' } }
+      expect(service.reload.title).to eq('Changed')
+      expect(flash[:alert]).to include('registering it with the external inbox failed')
+    end
+  end
 
   context 'when access is refused' do
     let(:plain) { User.create!(email: 'plain@example.com') }

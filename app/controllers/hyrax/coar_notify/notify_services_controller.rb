@@ -20,8 +20,7 @@ module Hyrax
         @notify_service = NotifyService.new(notify_service_params)
 
         if @notify_service.save
-          NotifyAPIClient.sync_notify_service(@notify_service)
-          redirect_to manage_notify_connections_path, notice: I18n.t("coar_notify.messages.service_created", default: "Notify Service created successfully.")
+          redirect_after_sync(notice: I18n.t("coar_notify.messages.service_created", default: "Notify Service created successfully."))
         else
           render :new, status: :unprocessable_entity
         end
@@ -32,8 +31,7 @@ module Hyrax
 
       def update
         if @notify_service.update(notify_service_params)
-          NotifyAPIClient.sync_notify_service(@notify_service)
-          redirect_to manage_notify_connections_path, notice: I18n.t("coar_notify.messages.service_updated", default: "Notify Service updated successfully.")
+          redirect_after_sync(notice: I18n.t("coar_notify.messages.service_updated", default: "Notify Service updated successfully."))
         else
           render :edit, status: :unprocessable_entity
         end
@@ -68,6 +66,21 @@ module Hyrax
       end
 
       private
+
+      # The service is saved either way; this only decides what to tell the user about registering
+      # it with the external inbox, which the caller cannot know without calling NotifyAPIClient.
+      def redirect_after_sync(notice:)
+        response = NotifyAPIClient.sync_notify_service(@notify_service)
+
+        if NotifyAPIClient.sync_successful?(response)
+          redirect_to manage_notify_connections_path, notice: notice
+        else
+          redirect_to manage_notify_connections_path, notice: notice,
+                      alert: I18n.t("coar_notify.messages.service_sync_failed",
+                                    default: "The service was saved, but registering it with the external inbox failed. " \
+                                             "You may need to try again, or check the inbox connection details.")
+        end
+      end
 
       # Only someone who can edit the work may request an endorsement or review for it.
       def authorize_work_editor!
