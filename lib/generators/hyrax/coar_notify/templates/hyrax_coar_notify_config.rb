@@ -7,6 +7,11 @@ Hyrax::CoarNotify.configure do |config|
   # Admin API Token for authenticating with the COAR Notify Inbox API
   config.admin_api_token = ENV.fetch('COAR_NOTIFY_ADMIN_API_TOKEN', nil)
 
+  # Username registered with the inbox for this app (see the install docs, step 1c) - sent when
+  # registering as a consumer, so the consumer is owned by that user rather than whichever user
+  # admin_api_token authenticates as. Only takes effect if admin_api_token is an inbox admin's.
+  # config.inbox_username = ENV.fetch('COAR_NOTIFY_INBOX_USERNAME', nil)
+
   # Explicit inbox notifications URL (defaults to #{base_url}/coar_notify_inbox/notifications)
   # config.inbox_url = "#{config.base_url}/coar_notify_inbox/notifications"
 
