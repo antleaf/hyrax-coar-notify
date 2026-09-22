@@ -34,6 +34,8 @@ en:
       origin: Origin
       service_created: Notify Service created successfully.
       service_deleted: Notify Service deleted successfully.
+      service_sync_failed: 'The service was saved, but registering it with the external inbox failed.
+        You may need to try again, or check the inbox connection details.'
       service_updated: Notify Service updated successfully.
       status: Message Status
       title: Notify messages
