@@ -20,7 +20,7 @@ module Hyrax
         @notify_service = NotifyService.new(notify_service_params)
 
         if @notify_service.save
-          NotifyAPIClient.sync_notify_service(notify_service_params)
+          NotifyAPIClient.sync_notify_service(@notify_service)
           redirect_to manage_notify_connections_path, notice: I18n.t("coar_notify.messages.service_created", default: "Notify Service created successfully.")
         else
           render :new, status: :unprocessable_entity
@@ -32,7 +32,7 @@ module Hyrax
 
       def update
         if @notify_service.update(notify_service_params)
-          NotifyAPIClient.sync_notify_service(notify_service_params)
+          NotifyAPIClient.sync_notify_service(@notify_service)
           redirect_to manage_notify_connections_path, notice: I18n.t("coar_notify.messages.service_updated", default: "Notify Service updated successfully.")
         else
           render :edit, status: :unprocessable_entity
