@@ -3,25 +3,43 @@
 module Hyrax
   module CoarNotify
     class NotificationFetcher
-      def inbox_url
+      Source = Struct.new(:url, :token)
+
+      def call
+        sources.each { |source| fetch_and_process(source) }
+      end
+
+      private
+
+      # Registered NotifyInbox records the admin has marked active are where notifications are
+      # fetched from. With none registered (or none active), fall back to the single inbox from
+      # Hyrax::CoarNotify.config, as this always did before more than one inbox could be registered.
+      def sources
+        active_inboxes = Hyrax::CoarNotify::NotifyInbox.active.to_a
+        return active_inboxes.map { |inbox| Source.new(inbox.inbox_url, inbox.api_key) } if active_inboxes.any?
+
+        [Source.new(configured_inbox_url, configured_token)]
+      end
+
+      def configured_inbox_url
         Hyrax::CoarNotify.config.inbox_url ||
           "#{Hyrax::CoarNotify.config.base_url || (defined?(CoarNotifyInboxConfig) ? CoarNotifyInboxConfig::BASE_URL : '')}/coar_notify_inbox/notifications"
       end
 
-      def token
+      def configured_token
         Hyrax::CoarNotify.config.admin_api_token || (defined?(CoarNotifyInboxConfig) ? CoarNotifyInboxConfig::ADMIN_API_TOKEN : nil)
       end
 
-      def call
-        response = Faraday.get(inbox_url) do |req|
-          req.headers["Authorization"] = "Bearer #{token}" if token.present?
+      def fetch_and_process(source)
+        response = Faraday.get(source.url) do |req|
+          req.headers["Authorization"] = "Bearer #{source.token}" if source.token.present?
           req.headers["Accept"] = "application/json"
         end
 
         raise "Failed to fetch notifications" unless response.success?
 
         notifications = JSON.parse(response.body)
-        raise "Unexpected notifications response from #{inbox_url}: expected a list" unless notifications.is_a?(Array)
+        raise "Unexpected notifications response from #{source.url}: expected a list" unless notifications.is_a?(Array)
 
         notifications.each do |notification|
           save_notification_and_process_relationships(notification)
@@ -31,8 +49,6 @@ module Hyrax
                              "#{e.class}: #{e.message}")
         end
       end
-
-      private
 
       def save_notification_and_process_relationships(notification)
         coar_notification = create_or_save_notification(notification)

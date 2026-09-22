@@ -235,6 +235,52 @@ RSpec.describe Hyrax::CoarNotify::NotificationFetcher do
     end
   end
 
+  describe '#call with registered NotifyInbox records' do
+    let(:configured_inbox) { 'https://repository.example.org/coar_notify_inbox/notifications' }
+
+    def accept(id, action: 'coar-notify:EndorsementAction')
+      { 'id' => id, 'raw_payload' => { 'type' => 'Accept',
+                                       'object' => { 'type' => ['Offer', action],
+                                                     'object' => { 'id' => 'https://repository.example.org/concern/datasets/work-valkyrie-101' } } } }
+    end
+
+    it 'ignores the configured inbox and fetches from an active registered inbox instead' do
+      Hyrax::CoarNotify::NotifyInbox.create!(title: 'Repo inbox', inbox_url: 'https://registered.example.org/notifications',
+                                             api_key: 'registered-token', status: true)
+      configured_stub = stub_request(:get, configured_inbox)
+      stub_request(:get, 'https://registered.example.org/notifications')
+        .with(headers: { 'Authorization' => 'Bearer registered-token' })
+        .to_return(status: 200, body: [accept('urn:uuid:reg-1')].to_json, headers: { 'Content-Type' => 'application/json' })
+
+      described_class.new.call
+
+      expect(notify_request.reload.status).to eq('Accepted')
+      expect(configured_stub).not_to have_been_requested
+    end
+
+    it 'fetches from every active inbox, but not from an inactive one' do
+      Hyrax::CoarNotify::NotifyInbox.create!(title: 'Active one', inbox_url: 'https://one.example.org/notifications', status: true)
+      Hyrax::CoarNotify::NotifyInbox.create!(title: 'Active two', inbox_url: 'https://two.example.org/notifications', status: true)
+      Hyrax::CoarNotify::NotifyInbox.create!(title: 'Inactive', inbox_url: 'https://three.example.org/notifications', status: false)
+      stub_request(:get, 'https://one.example.org/notifications')
+        .to_return(status: 200, body: [accept('urn:uuid:one')].to_json, headers: { 'Content-Type' => 'application/json' })
+      review_request = Hyrax::CoarNotify::NotifyRequest.create!(work_id: 'work-valkyrie-101', notify_service: service,
+                                                                request_type: 'request_review', status: 'sent')
+      stub_request(:get, 'https://two.example.org/notifications')
+        .to_return(status: 200, body: [{ 'id' => 'urn:uuid:two', 'raw_payload' => { 'type' => 'Reject',
+                     'object' => { 'type' => ['Offer', 'coar-notify:ReviewAction'],
+                                   'object' => { 'id' => 'https://repository.example.org/concern/datasets/work-valkyrie-101' } } } }].to_json,
+                   headers: { 'Content-Type' => 'application/json' })
+      inactive_stub = stub_request(:get, 'https://three.example.org/notifications')
+
+      described_class.new.call
+
+      expect(notify_request.reload.status).to eq('Accepted')
+      expect(review_request.reload.status).to eq('Rejected')
+      expect(inactive_stub).not_to have_been_requested
+    end
+  end
+
   describe '#call answering two requests for the same work' do
     let(:inbox) { 'https://repository.example.org/coar_notify_inbox/notifications' }
     let(:work_url) { 'https://repository.example.org/concern/datasets/work-valkyrie-101' }
