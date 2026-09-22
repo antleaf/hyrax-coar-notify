@@ -34,6 +34,10 @@ module Hyrax
           req.body = pretty_generated_payload
         end
 
+        # Faraday does not raise for a non-2xx response, so an error reply would otherwise fall
+        # through to here and be recorded, and reported to the user, as sent successfully.
+        return notify_failure(unsuccessful_response_message(response)) unless response.success?
+
         NotifyRequestLogger.log_request!(
           work: work,
           target: target,
@@ -90,6 +94,10 @@ module Hyrax
       # a reply names it in `inReplyTo`, which is how the reply is matched back to this request.
       def notification_id
         @notification_id ||= "urn:uuid:#{SecureRandom.uuid}"
+      end
+
+      def unsuccessful_response_message(response)
+        "#{target.title} responded #{response.status}#{" #{response.reason_phrase}" if response.reason_phrase.present?}: #{response.body}"
       end
 
       def origin_inbox_url

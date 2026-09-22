@@ -97,4 +97,48 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
       expect(Hyrax::CoarNotify::NotifyRequest.last.notification_id).not_to include(work.id)
     end
   end
+
+  describe '#call when the target responds with an error' do
+    let(:inbox) { service.inbox_url }
+
+    before { allow(Hyrax::MessengerService).to receive(:deliver) if defined?(Hyrax::MessengerService) }
+
+    it 'does not record a NotifyRequest for a 4xx response' do
+      stub_request(:post, inbox).to_return(status: 422, body: '{"error":"invalid target"}')
+      expect { described_class.new(work: work, target: service, user: user).call }
+        .not_to change(Hyrax::CoarNotify::NotifyRequest, :count)
+    end
+
+    it 'does not record a NotifyRequest for a 5xx response' do
+      stub_request(:post, inbox).to_return(status: 503, body: 'unavailable')
+      expect { described_class.new(work: work, target: service, user: user).call }
+        .not_to change(Hyrax::CoarNotify::NotifyRequest, :count)
+    end
+
+    it 'reports the failure, including the response body, rather than success' do
+      stub_request(:post, inbox).to_return(status: 422, body: '{"error":"invalid target"}')
+      expect(Hyrax::MessengerService).to receive(:deliver) do |_user, _recipients, message, _subject|
+        expect(message).to include('422')
+        expect(message).to include('invalid target')
+        expect(message).not_to include('successfully')
+      end
+      described_class.new(work: work, target: service, user: user).call
+    end
+
+    it 'lets the request be sent again, since nothing was recorded as sent' do
+      stub_request(:post, inbox).to_return({ status: 500 }, { status: 201, body: '{}' })
+      2.times { described_class.new(work: work, target: service, user: user).call }
+      expect(Hyrax::CoarNotify::NotifyRequest.count).to eq(1)
+      expect(Hyrax::CoarNotify::NotifyRequest.last.status).to eq('Sent')
+    end
+  end
+
+  describe '#call when the target accepts the request' do
+    it 'still records and reports success for a non-201 success status' do
+      stub_request(:post, service.inbox_url).to_return(status: 200, body: '{}')
+      allow(Hyrax::MessengerService).to receive(:deliver) if defined?(Hyrax::MessengerService)
+      described_class.new(work: work, target: service, user: user).call
+      expect(Hyrax::CoarNotify::NotifyRequest.last.status).to eq('Sent')
+    end
+  end
 end
