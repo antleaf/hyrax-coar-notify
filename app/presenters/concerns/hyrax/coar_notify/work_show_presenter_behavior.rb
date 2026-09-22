@@ -5,6 +5,14 @@ module Hyrax
     module WorkShowPresenterBehavior
       extend ActiveSupport::Concern
 
+      # Solr field names for the attributes defined by the install generator's
+      # coar_notify_metadata.yaml. A plain SolrDocument has no reader methods for these (they're
+      # resource attributes, not SolrDocument accessors), so they're read straight from Solr instead.
+      ENDORSEMENTS_FIELD = "endorsements_tesim"
+      REVIEWS_FIELD = "reviews_tesim"
+      HAS_ENDORSEMENT_FIELD = "has_endorsement_bsi"
+      HAS_REVIEW_FIELD = "has_review_bsi"
+
       def notify_services
         @notify_services ||= Hyrax::CoarNotify::NotifyService.active.order(created_at: :desc)
       end
@@ -16,31 +24,11 @@ module Hyrax
       end
 
       def parsed_endorsements
-        if solr_document.respond_to?(:parsed_endorsements)
-          solr_document.parsed_endorsements
-        elsif solr_document.respond_to?(:endorsements) && solr_document.endorsements.present?
-          Array(solr_document.endorsements).map do |e|
-            e.is_a?(String) ? JSON.parse(e) : e
-          rescue JSON::ParserError
-            e
-          end
-        else
-          []
-        end
+        parse_entries(solr_document[ENDORSEMENTS_FIELD])
       end
 
       def parsed_reviews
-        if solr_document.respond_to?(:parsed_reviews)
-          solr_document.parsed_reviews
-        elsif solr_document.respond_to?(:reviews) && solr_document.reviews.present?
-          Array(solr_document.reviews).map do |r|
-            r.is_a?(String) ? JSON.parse(r) : r
-          rescue JSON::ParserError
-            r
-          end
-        else
-          []
-        end
+        parse_entries(solr_document[REVIEWS_FIELD])
       end
 
       def endorsements
@@ -52,11 +40,25 @@ module Hyrax
       end
 
       def has_endorsement?
-        endorsements.any? || solr_document.try(:has_endorsement) == true || solr_document.try(:has_endorsement) == 'true'
+        endorsements.any? || truthy?(solr_document[HAS_ENDORSEMENT_FIELD])
       end
 
       def has_review?
-        reviews.any? || solr_document.try(:has_review) == true || solr_document.try(:has_review) == 'true'
+        reviews.any? || truthy?(solr_document[HAS_REVIEW_FIELD])
+      end
+
+      private
+
+      def parse_entries(values)
+        Array(values).map do |entry|
+          entry.is_a?(String) ? JSON.parse(entry) : entry
+        rescue JSON::ParserError
+          entry
+        end
+      end
+
+      def truthy?(value)
+        value == true || value.to_s == 'true'
       end
     end
   end

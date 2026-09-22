@@ -3,14 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe Hyrax::CoarNotify::WorkShowPresenterBehavior do
+  # A plain SolrDocument (Blacklight::Document) has no #endorsements/#reviews accessors - only raw
+  # field access via #[], keyed by whatever coar_notify_metadata.yaml indexed them as.
   let(:dummy_solr_doc) do
-    double(
-      'SolrDocument',
-      endorsements: ['{"service_provider":"https://service.org","endorsement_url":"https://service.org/1"}'],
-      reviews: ['{"service_provider":"https://service.org","review_url":"https://service.org/rev/1"}'],
-      has_endorsement: true,
-      has_review: true
-    )
+    {
+      'endorsements_tesim' => ['{"service_provider":"https://service.org","endorsement_url":"https://service.org/1"}'],
+      'reviews_tesim' => ['{"service_provider":"https://service.org","review_url":"https://service.org/rev/1"}'],
+      'has_endorsement_bsi' => true,
+      'has_review_bsi' => true
+    }
   end
 
   let(:dummy_presenter_class) do
@@ -27,9 +28,23 @@ RSpec.describe Hyrax::CoarNotify::WorkShowPresenterBehavior do
 
   let(:presenter) { dummy_presenter_class.new(dummy_solr_doc) }
 
-  it 'provides parsed endorsements and reviews' do
+  it 'reads endorsements and reviews straight from the raw Solr fields' do
     expect(presenter.parsed_endorsements.first['service_provider']).to eq('https://service.org')
     expect(presenter.parsed_reviews.first['review_url']).to eq('https://service.org/rev/1')
+    expect(presenter.has_endorsement?).to be true
+    expect(presenter.has_review?).to be true
+  end
+
+  it 'reports none when the raw fields are absent, without erroring on a plain SolrDocument' do
+    presenter = dummy_presenter_class.new({})
+    expect(presenter.parsed_endorsements).to eq([])
+    expect(presenter.parsed_reviews).to eq([])
+    expect(presenter.has_endorsement?).to be false
+    expect(presenter.has_review?).to be false
+  end
+
+  it 'treats the has_endorsement/has_review flag stored as the string "true" the same as boolean true' do
+    presenter = dummy_presenter_class.new('has_endorsement_bsi' => 'true', 'has_review_bsi' => 'true')
     expect(presenter.has_endorsement?).to be true
     expect(presenter.has_review?).to be true
   end
