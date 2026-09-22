@@ -141,4 +141,14 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
       expect(Hyrax::CoarNotify::NotifyRequest.last.status).to eq('Sent')
     end
   end
+
+  describe '#call when something outside the rescued classes goes wrong' do
+    it 'notifies the user and still lets the error propagate, so the job is marked failed' do
+      allow(Hyrax.query_service).to receive(:find_members).and_raise(NoMemoryError, 'out of memory')
+      allow(Hyrax::MessengerService).to receive(:deliver) if defined?(Hyrax::MessengerService)
+
+      expect { described_class.new(work: work, target: service, user: user).call }.to raise_error(NoMemoryError)
+      expect(Hyrax::MessengerService).to have_received(:deliver).with(anything, anything, a_string_including('out of memory'), anything) if defined?(Hyrax::MessengerService)
+    end
+  end
 end
