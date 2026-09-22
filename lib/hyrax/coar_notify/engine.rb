@@ -11,6 +11,10 @@ module Hyrax
         # Register view paths or assets if needed
       end
 
+      initializer 'hyrax_coar_notify.scheduler' do
+        Hyrax::CoarNotify::Scheduler.register!
+      end
+
       config.generators do |g|
         g.test_framework :rspec
         g.fixture_replacement :factory_bot
