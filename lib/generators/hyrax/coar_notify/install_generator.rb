@@ -32,13 +32,15 @@ module Hyrax
         content = File.read(sidebar_file)
         return if content.include?('coar_notify')
 
-        append_to_file sidebar_file, <<~ERB
-          <li>
-            <%= link_to (defined?(hyrax_coar_notify) ? hyrax_coar_notify.root_path : "/coar_notify"), class: "nav-link", title: I18n.t('coar_notify.title') do %>
-              <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= I18n.t('coar_notify.title') %></span>
-            <% end %>
-          </li>
-        ERB
+        insert_into_file sidebar_file, before: '</ul>' do
+          <<~ERB
+            <li>
+              <%= link_to (defined?(hyrax_coar_notify) ? hyrax_coar_notify.root_path : "/coar_notify"), class: "nav-link", title: I18n.t('coar_notify.title') do %>
+                <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= I18n.t('coar_notify.title') %></span>
+              <% end %>
+            </li>
+          ERB
+        end
       end
     end
   end
