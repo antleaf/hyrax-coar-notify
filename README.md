@@ -7,6 +7,10 @@ This is designed to implement the [COAR Notify Protocol (v1.0.1)](https://coar-n
 
 It depends on the [COAR-Notify Inbox Rails Engine](https://github.com/antleaf/coar-notify-inbox-rails-engine)
 
+See [Installing Hyrax COAR Notify](docs/INSTALLATION.md) for how to add this gem to a Hyrax host
+application and wire it up. For a complete, working example, see the
+[demonstrator app](https://github.com/antleaf/hyrax-coar-notify-demonstrator).
+
 The document [wireframes.pdf](docs/Wireframes.pdf)  created as a part of the design process for Hyrax Notify has the wireframes designs. The images for it are at [Wireframe images](docs/Wireframe images/)
 
 The document [Hyrax Notify with external inbox](docs/Hyrax%20Notify%20with%20external%20inbox.md) details how Hyrax Notify is to be used to send and receive Notify notifications, when configured with an external inbox.
