@@ -2,6 +2,7 @@
 
 require 'hyrax/coar_notify/version'
 require 'hyrax/coar_notify/configuration'
+require 'hyrax/coar_notify/scheduler'
 require 'hyrax/coar_notify/engine'
 
 module Hyrax
