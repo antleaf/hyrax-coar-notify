@@ -74,7 +74,7 @@ module Hyrax
 
         insert_into_file ABILITY_FILE, after: /def custom_permissions.*\n/ do
           <<~RUBY.gsub(/^(?=.)/, '    ')
-            if current_user.admin? || user_groups.include?(Hyrax::CoarNotify.config.manager_role.to_s)
+            if admin? || user_groups.include?(Hyrax::CoarNotify.config.manager_role.to_s)
               can [:manage], Hyrax::CoarNotify::NotifyService
               can [:manage], Hyrax::CoarNotify::NotifyInbox
               can :access, :coar_notify

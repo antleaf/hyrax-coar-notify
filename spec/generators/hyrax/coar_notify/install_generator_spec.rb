@@ -109,6 +109,32 @@ RSpec.describe Hyrax::CoarNotify::InstallGenerator, type: :generator do
       end
     end
 
+    it 'grants access to admins and manager-role members, for a user without #admin? (stock Hyrax)' do
+      with_ability(ability) do
+        described_class.new.inject_ability_rules
+        host = Class.new do
+          include CanCan::Ability
+          attr_reader :current_user, :user_groups
+
+          def initialize(groups)
+            @current_user = Object.new # like a stock Hyrax User: no #admin?
+            @user_groups = groups
+            custom_permissions
+          end
+
+          def admin?
+            user_groups.include?('admin')
+          end
+        end
+        host.class_eval(File.read('app/models/ability.rb')[/  def custom_permissions.*?^  end/m])
+        manager_role = Hyrax::CoarNotify.config.manager_role.to_s
+
+        expect(host.new(['admin']).can?(:access, :coar_notify)).to be true
+        expect(host.new([manager_role]).can?(:manage, Hyrax::CoarNotify::NotifyService)).to be true
+        expect(host.new(['patron']).can?(:access, :coar_notify)).to be false
+      end
+    end
+
     it 'does not add the rules twice' do
       with_ability(ability) do
         described_class.new.inject_ability_rules
