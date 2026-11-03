@@ -100,6 +100,19 @@ of `Hyrax::Schema` — see Hyrax's own ActiveFedora work generator for the patte
 | `manager_role` | `admin` (`ENV["NOTIFY_MANAGER_ROLE"]`) | Role name that grants access to the Notify dashboard and connection management (see the README's "Access control" section) |
 | `inbox_username` | `ENV["COAR_NOTIFY_INBOX_USERNAME"]` | Optional; sent when registering a consumer, effective only when `admin_api_token` authenticates as an inbox admin |
 
+## Rake tasks
+
+The gem ships three tasks for setting up a fresh host app:
+
+```sh
+rails db:exists                                  # exits 0 if the database is reachable, 1 otherwise
+rails notify:setup_default_roles                 # creates the admin and review_service_manager roles
+rails "notify:setup_hyrax[seed/setup.json]"      # roles, users from the seed file, default admin set, workflows, collection types, languages
+```
+
+`notify:setup_hyrax` reads a JSON seed file (default `seed/setup.json` in the host app) with a `users` list of
+`{ "email", "password", "name", "role" }`; users with `"role": "admin"` get the admin role.
+
 ## Verifying it worked
 
 - Sign in as an admin (or a user with the `manager_role`) and visit `/coar_notify` — you should see
