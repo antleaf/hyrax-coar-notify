@@ -223,4 +223,76 @@ RSpec.describe Hyrax::CoarNotify::InstallGenerator, type: :generator do
       end
     end
   end
+
+  describe '#add_partials_to_work_type_show_views' do
+    let(:view_path) { 'app/views/hyrax/datasets/show.html.erb' }
+
+    def in_empty_app
+      Dir.mktmpdir { |dir| Dir.chdir(dir) { yield } }
+    end
+
+    def generate(*types)
+      described_class.new([], work_types: types).add_partials_to_work_type_show_views
+    end
+
+    it "creates the view from Hyrax's base show view, plus the two partials in the right places" do
+      in_empty_app do
+        generate('Dataset')
+        result = File.read(view_path)
+
+        expect(result.index("render 'show_actions'")).to be < result.index('shared/endorsement_actions')
+        expect(result.index('shared/endorsement_actions')).to be < result.index("render 'workflow_actions_widget'")
+        expect(result.index('<!-- /.card -->')).to be < result.index('shared/endorsements_and_reviews')
+        expect(result.index('shared/endorsements_and_reviews')).to be < result.index("render 'relationships'")
+        expect(result.scan('hyrax/coar_notify/shared').size).to eq(2)
+      end
+    end
+
+    it 'differs from the base view only by the two added renders and one blank line' do
+      in_empty_app do
+        generate('Dataset')
+        base = File.readlines(Hyrax::Engine.root.join('app/views/hyrax/base/show.html.erb'))
+        lines = File.readlines(view_path)
+        reviews = lines.index { |l| l.include?('shared/endorsements_and_reviews') }
+        lines.delete_at(reviews)
+        lines.delete_at(reviews - 1) # the blank line separating it from the card above
+        lines.reject! { |l| l.include?('shared/endorsement_actions') }
+
+        expect(lines).to eq(base)
+      end
+    end
+
+    it 'adds the partials to an existing show view and keeps its customizations' do
+      in_empty_app do
+        base = File.read(Hyrax::Engine.root.join('app/views/hyrax/base/show.html.erb'))
+        FileUtils.mkdir_p(File.dirname(view_path))
+        File.write(view_path, base + "<%# my customization %>\n")
+        generate('Dataset')
+        result = File.read(view_path)
+
+        expect(result).to include('my customization')
+        expect(result.scan('hyrax/coar_notify/shared').size).to eq(2)
+      end
+    end
+
+    it 'does not add the partials twice' do
+      in_empty_app do
+        generate('Dataset')
+        once = File.read(view_path)
+        generate('Dataset')
+
+        expect(File.read(view_path)).to eq(once)
+      end
+    end
+
+    it 'leaves a view without the expected markup untouched' do
+      in_empty_app do
+        FileUtils.mkdir_p(File.dirname(view_path))
+        File.write(view_path, "<p>custom</p>\n")
+        generate('Dataset')
+
+        expect(File.read(view_path)).to eq("<p>custom</p>\n")
+      end
+    end
+  end
 end

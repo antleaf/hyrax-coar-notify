@@ -37,6 +37,30 @@ module Hyrax
         end
       end
 
+      ACTIONS_ANCHOR = "<%= render 'show_actions', presenter: @presenter %>\n"
+      ACTIONS_PARTIAL = "<%= render 'hyrax/coar_notify/shared/endorsement_actions', presenter: @presenter %>\n"
+      CARD_ANCHOR = "</div><!-- /.card -->\n"
+      REVIEWS_PARTIAL = "<%= render 'hyrax/coar_notify/shared/endorsements_and_reviews', presenter: @presenter %>\n"
+
+      # Hyrax generates no show view for a work type, so start from Hyrax's own base/show.html.erb.
+      def add_partials_to_work_type_show_views
+        work_type_names.each do |name|
+          path = "app/views/hyrax/#{name.underscore.pluralize}/show.html.erb"
+          source = File.exist?(path) ? File.read(path) : File.read(Hyrax::Engine.root.join('app/views/hyrax/base/show.html.erb'))
+          next if source.include?('hyrax/coar_notify/shared')
+
+          unless source.include?(ACTIONS_ANCHOR) && source.include?(CARD_ANCHOR)
+            say_status :skip, "#{path} doesn't have the expected show_actions/card markup; render hyrax/coar_notify/shared/endorsement_actions and endorsements_and_reviews by hand", :yellow
+            next
+          end
+
+          indent = ->(anchor) { source[/^([ \t]*)#{Regexp.escape(anchor)}/, 1] }
+          source = source.sub(ACTIONS_ANCHOR) { "#{ACTIONS_ANCHOR}#{indent[ACTIONS_ANCHOR]}#{ACTIONS_PARTIAL}" }
+          source = source.sub(CARD_ANCHOR) { "#{CARD_ANCHOR}\n#{indent[CARD_ANCHOR]}#{REVIEWS_PARTIAL}" }
+          create_file path, source, force: true
+        end
+      end
+
       ABILITY_FILE = 'app/models/ability.rb'
 
       def inject_ability_rules
