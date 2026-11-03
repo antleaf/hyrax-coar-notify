@@ -133,4 +133,94 @@ RSpec.describe Hyrax::CoarNotify::InstallGenerator, type: :generator do
       end
     end
   end
+
+  describe '#add_schema_to_work_types' do
+    let(:model) do
+      <<~RUBY
+        class Dataset < Hyrax::Work
+          include Hyrax::Schema(:basic_metadata)
+          include Hyrax::Schema(:dataset)
+        end
+      RUBY
+    end
+    let(:indexer) do
+      <<~RUBY
+        class DatasetIndexer < Hyrax::Indexers::PcdmObjectIndexer(Dataset)
+          include Hyrax::Indexer(:basic_metadata)
+          include Hyrax::Indexer(:dataset)
+
+          # custom
+        end
+      RUBY
+    end
+
+    def in_work_app(files)
+      Dir.mktmpdir do |dir|
+        files.each do |path, contents|
+          FileUtils.mkdir_p(File.join(dir, File.dirname(path)))
+          File.write(File.join(dir, path), contents)
+        end
+        Dir.chdir(dir) { yield }
+      end
+    end
+
+    def generate(*types)
+      described_class.new([], work_types: types).add_schema_to_work_types
+    end
+
+    it 'adds the schema and indexer after the last existing include, keeping them valid Ruby' do
+      in_work_app('app/models/dataset.rb' => model, 'app/indexers/dataset_indexer.rb' => indexer) do
+        generate('Dataset')
+
+        expect(File.read('app/models/dataset.rb')).to include("  include Hyrax::Schema(:dataset)\n  include Hyrax::Schema(:coar_notify_metadata)\n")
+        expect(File.read('app/indexers/dataset_indexer.rb'))
+          .to include("  include Hyrax::Indexer(:dataset)\n  include Hyrax::Indexer(:coar_notify_metadata)\n\n  # custom")
+        %w[app/models/dataset.rb app/indexers/dataset_indexer.rb].each do |f|
+          expect { RubyVM::InstructionSequence.compile(File.read(f)) }.not_to raise_error
+        end
+      end
+    end
+
+    it 'does not add anything twice' do
+      in_work_app('app/models/dataset.rb' => model, 'app/indexers/dataset_indexer.rb' => indexer) do
+        generate('Dataset')
+        once = [File.read('app/models/dataset.rb'), File.read('app/indexers/dataset_indexer.rb')]
+        generate('Dataset')
+
+        expect([File.read('app/models/dataset.rb'), File.read('app/indexers/dataset_indexer.rb')]).to eq(once)
+      end
+    end
+
+    it 'leaves a work type with no Hyrax::Schema (ActiveFedora) alone' do
+      af = "class Legacy < ActiveFedora::Base\nend\n"
+      in_work_app('app/models/legacy.rb' => af) do
+        expect { generate('Legacy') }.not_to raise_error
+        expect(File.read('app/models/legacy.rb')).to eq(af)
+      end
+    end
+
+    it 'skips work types whose files do not exist' do
+      in_work_app('app/models/.keep' => '') do
+        expect { generate('Missing') }.not_to raise_error
+      end
+    end
+
+    it 'defaults to every registered curation concern type' do
+      allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['Dataset'])
+      in_work_app('app/models/dataset.rb' => model) do
+        described_class.new.add_schema_to_work_types
+
+        expect(File.read('app/models/dataset.rb')).to include('coar_notify_metadata')
+      end
+    end
+
+    it 'only touches the requested work types' do
+      other = model.sub('Dataset', 'Other')
+      in_work_app('app/models/dataset.rb' => model, 'app/models/other.rb' => other) do
+        generate('Dataset')
+
+        expect(File.read('app/models/other.rb')).to eq(other)
+      end
+    end
+  end
 end

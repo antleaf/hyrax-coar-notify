@@ -9,6 +9,9 @@ module Hyrax
 
       desc 'Installs Hyrax::CoarNotify into a host Hyrax application.'
 
+      class_option :work_types, type: :array, default: nil,
+                                desc: 'Work types to enable endorsements/reviews on (default: every registered curation concern type)'
+
       def copy_initializer
         template 'hyrax_coar_notify_config.rb', 'config/initializers/hyrax_coar_notify.rb'
       end
@@ -23,6 +26,15 @@ module Hyrax
 
       def install_migrations
         rake 'hyrax_coar_notify:install:migrations' rescue nil
+      end
+
+      def add_schema_to_work_types
+        work_type_names.each do |name|
+          add_line_after_last_match("app/models/#{name.underscore}.rb", /include Hyrax::Schema\(/,
+                                    'include Hyrax::Schema(:coar_notify_metadata)')
+          add_line_after_last_match("app/indexers/#{name.underscore}_indexer.rb", /include Hyrax::Indexer\(/,
+                                    'include Hyrax::Indexer(:coar_notify_metadata)')
+        end
       end
 
       ABILITY_FILE = 'app/models/ability.rb'
@@ -65,6 +77,27 @@ module Hyrax
             <% end %>
           ERB
         end
+      end
+
+      private
+
+      def work_type_names
+        options[:work_types] || (defined?(Hyrax) ? Hyrax.config.registered_curation_concern_types : [])
+      end
+
+      # Adds `line` after the last line matching `pattern`, matching its indentation. Skips (with a
+      # message) when the file is missing, already has the line, or has no line to anchor on, e.g. an
+      # ActiveFedora work type, which has no Hyrax::Schema to extend.
+      def add_line_after_last_match(path, pattern, line)
+        return say_status(:skip, "#{path} not found", :yellow) unless File.exist?(path)
+
+        lines = File.readlines(path)
+        return if lines.any? { |l| l.include?(line) }
+
+        anchor = lines.reverse.find { |l| l.match?(pattern) }
+        return say_status(:skip, "#{path} has no #{pattern.source}; add `#{line}` by hand", :yellow) unless anchor
+
+        insert_into_file path, "#{anchor[/\A\s*/]}#{line}\n", after: anchor
       end
     end
   end
