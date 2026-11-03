@@ -25,6 +25,28 @@ module Hyrax
         rake 'hyrax_coar_notify:install:migrations' rescue nil
       end
 
+      ABILITY_FILE = 'app/models/ability.rb'
+
+      def inject_ability_rules
+        return unless File.exist?(ABILITY_FILE)
+        return if File.read(ABILITY_FILE).include?('coar_notify')
+
+        unless File.read(ABILITY_FILE).match?(/def custom_permissions\b/)
+          say_status :skip, "#{ABILITY_FILE} has no custom_permissions method; add the COAR Notify rules by hand (see docs/INSTALLATION.md)", :yellow
+          return
+        end
+
+        insert_into_file ABILITY_FILE, after: /def custom_permissions.*\n/ do
+          <<~RUBY.gsub(/^(?=.)/, '    ')
+            if current_user.admin? || user_groups.include?(Hyrax::CoarNotify.config.manager_role.to_s)
+              can [:manage], Hyrax::CoarNotify::NotifyService
+              can [:manage], Hyrax::CoarNotify::NotifyInbox
+              can :access, :coar_notify
+            end
+          RUBY
+        end
+      end
+
       def inject_sidebar_link
         sidebar_file = 'app/views/hyrax/dashboard/_sidebar.html.erb'
         return unless File.exist?(sidebar_file)
@@ -34,11 +56,13 @@ module Hyrax
 
         insert_into_file sidebar_file, before: '</ul>' do
           <<~ERB
-            <li>
-              <%= link_to (defined?(hyrax_coar_notify) ? hyrax_coar_notify.root_path : "/coar_notify"), class: "nav-link", title: I18n.t('coar_notify.title') do %>
-                <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= I18n.t('coar_notify.title') %></span>
-              <% end %>
-            </li>
+            <% if can?(:access, :coar_notify) %>
+              <li class="nav-item">
+                <%= link_to hyrax_coar_notify.root_path, class: "nav-link", title: t('coar_notify.title') do %>
+                  <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('coar_notify.title') %></span>
+                <% end %>
+              </li>
+            <% end %>
           ERB
         end
       end

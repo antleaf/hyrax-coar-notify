@@ -46,6 +46,16 @@ RSpec.describe Hyrax::CoarNotify::InstallGenerator, type: :generator do
       end
     end
 
+    it 'only shows the link to users who can access Notify' do
+      in_host_app do
+        described_class.new.inject_sidebar_link
+        result = File.read(sidebar_path)
+
+        expect(result.index("can?(:access, :coar_notify)")).to be < result.index('hyrax_coar_notify.root_path')
+        expect(result).to include('hyrax_coar_notify.root_path')
+      end
+    end
+
     it 'does not insert a second link on a repeat run' do
       in_host_app do
         described_class.new.inject_sidebar_link
@@ -62,6 +72,64 @@ RSpec.describe Hyrax::CoarNotify::InstallGenerator, type: :generator do
       in_host_app(with_sidebar: false) do
         expect { described_class.new.inject_sidebar_link }.not_to raise_error
         expect(File.exist?(sidebar_path)).to be false
+      end
+    end
+  end
+
+  describe '#inject_ability_rules' do
+    let(:ability) do
+      <<~RUBY
+        class Ability
+          include Hyrax::Ability
+
+          def custom_permissions
+            # existing
+            can :read, :things
+          end
+        end
+      RUBY
+    end
+
+    def with_ability(contents)
+      Dir.mktmpdir do |dir|
+        FileUtils.mkdir_p(File.join(dir, 'app/models'))
+        File.write(File.join(dir, 'app/models/ability.rb'), contents) if contents
+        Dir.chdir(dir) { yield }
+      end
+    end
+
+    it 'adds the rules at the top of custom_permissions, leaving existing rules after them' do
+      with_ability(ability) do
+        described_class.new.inject_ability_rules
+        result = File.read('app/models/ability.rb')
+
+        expect(result).to include('can :access, :coar_notify')
+        expect(result.index('can :access, :coar_notify')).to be < result.index('can :read, :things')
+        expect { RubyVM::InstructionSequence.compile(result) }.not_to raise_error
+      end
+    end
+
+    it 'does not add the rules twice' do
+      with_ability(ability) do
+        described_class.new.inject_ability_rules
+        once = File.read('app/models/ability.rb')
+        described_class.new.inject_ability_rules
+
+        expect(File.read('app/models/ability.rb')).to eq(once)
+      end
+    end
+
+    it 'leaves an ability without custom_permissions alone' do
+      with_ability("class Ability; end\n") do
+        expect { described_class.new.inject_ability_rules }.not_to raise_error
+        expect(File.read('app/models/ability.rb')).to eq("class Ability; end\n")
+      end
+    end
+
+    it 'does nothing when the host has no ability.rb' do
+      with_ability(nil) do
+        expect { described_class.new.inject_ability_rules }.not_to raise_error
+        expect(File.exist?('app/models/ability.rb')).to be false
       end
     end
   end
