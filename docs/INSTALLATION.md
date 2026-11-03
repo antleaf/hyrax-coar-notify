@@ -164,9 +164,18 @@ instead of `Hyrax::Schema`, as in Hyrax's own ActiveFedora work generator.)
 
 ## 7. Schedule the notification fetch
 
-With `sidekiq-scheduler` in your Gemfile (step 1), the engine schedules `FetchNotificationsJob` itself when
-Sidekiq starts, using `fetch_schedule` (default every 5 minutes). Make sure your Sidekiq config processes the
-queue the job runs on (`default`). Without `sidekiq-scheduler`, run
+With `sidekiq-scheduler` in your Gemfile (step 1), the engine registers `FetchNotificationsJob` when Sidekiq
+starts, using `fetch_schedule` (default every 5 minutes). sidekiq-scheduler only runs schedules registered
+this way when dynamic scheduling is on, so add this to `config/sidekiq.yml` (without it Sidekiq logs
+`Schedule empty!` and the job never runs):
+
+```yaml
+:scheduler:
+  :dynamic: true
+```
+
+Make sure your Sidekiq config also processes the queue the job runs on (`default`). Without
+`sidekiq-scheduler`, run
 `Hyrax::CoarNotify::FetchNotificationsJob.perform_later` on your own schedule. See the README's "Fetching
 notifications" section.
 
