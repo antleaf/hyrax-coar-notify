@@ -196,7 +196,20 @@ notifications" section.
 
 ## Rake tasks
 
-The gem ships three tasks for setting up a fresh host app:
+The gem ships three tasks for setting up a fresh host app. `notify:setup_default_roles` and
+`notify:setup_hyrax` create database roles with the `Role` model from
+[hydra-role-management](https://github.com/samvera/hydra-role-management). A plain Hyrax app doesn't have it, and
+without it these two tasks raise `uninitialized constant Role`. To use them:
+
+```sh
+# Gemfile: gem "hydra-role-management"
+bundle install
+rails generate roles   # adds a migration, includes the roles in User, mounts its engine
+rails db:migrate
+```
+
+Once it is installed, a user's roles come from the database instead of `config/role_map.yml`, so an admin that was
+only listed in `role_map.yml` stops being an admin. Create admins with the seed file below.
 
 ```sh
 rails db:exists                                  # exits 0 if the database is reachable, 1 otherwise
