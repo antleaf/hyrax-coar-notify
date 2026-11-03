@@ -29,7 +29,7 @@ Everyone else is redirected to the home page with an alert, and anonymous visito
 
 ## Fetching notifications
 
-Incoming notifications are pulled by `Hyrax::CoarNotify::FetchNotificationsJob`, on the cron schedule in `Hyrax::CoarNotify.config.fetch_schedule` (default every 5 minutes, set with `config.fetch_schedule` in `config/initializers/hyrax_coar_notify_config.rb`).
+Incoming notifications are pulled by `Hyrax::CoarNotify::FetchNotificationsJob`, on the cron schedule in `Hyrax::CoarNotify.config.fetch_schedule` (default every 5 minutes, set with `config.fetch_schedule` in `config/initializers/hyrax_coar_notify.rb`).
 
 If your host app has [sidekiq-scheduler](https://github.com/sidekiq-scheduler/sidekiq-scheduler) loaded, the engine registers this schedule on Sidekiq server startup, alongside whatever other jobs you already have scheduled. sidekiq-scheduler only runs schedules registered this way when dynamic scheduling is on, so add this to `config/sidekiq.yml`:
 
