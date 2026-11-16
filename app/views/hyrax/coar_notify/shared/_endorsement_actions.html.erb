@@ -1,5 +1,5 @@
 <% presenter ||= @presenter %>
-<% if presenter.respond_to?(:notify_services) && presenter.notify_services.present? %>
+<% if presenter.respond_to?(:can_request_notify?) && presenter.can_request_notify? && presenter.respond_to?(:notify_services) && presenter.notify_services.present? %>
   <div class="actions d-flex">
     <div class="dropdown mr-2">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="RequestEndorsementButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

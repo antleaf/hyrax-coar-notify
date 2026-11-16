@@ -25,4 +25,11 @@ RSpec.describe Hyrax::CoarNotify::NotifyRequest, type: :model do
       expect(described_class.with_notifications).to include(request)
     end
   end
+
+  it 'has an Accepted status for a service accepting the request' do
+    service = Hyrax::CoarNotify::NotifyService.create!(title: 'S', service_url: 'https://s.test', status: true)
+    request = described_class.create!(work_id: 'w', notify_service: service, request_type: 'request_review', status: 'accept')
+    expect(request.status).to eq('Accepted')
+    expect(described_class.statuses.values).to include('accept')
+  end
 end

@@ -29,9 +29,13 @@ en:
       inbox_updated: Inbox updated successfully.
       messages_found: Showing latest %{count} messages
       no_messages: No messages found
+      not_authorized: You are not authorized to manage Notify connections.
+      not_authorized_to_request: You are not authorized to request an endorsement or review for this work.
       origin: Origin
       service_created: Notify Service created successfully.
       service_deleted: Notify Service deleted successfully.
+      service_sync_failed: 'The service was saved, but registering it with the external inbox failed.
+        You may need to try again, or check the inbox connection details.'
       service_updated: Notify Service updated successfully.
       status: Message Status
       title: Notify messages

@@ -67,6 +67,7 @@ if ActiveRecord::Base.connection.adapter_name.downcase.include?('sqlite')
       t.string :display_name
       t.string :user_key
       t.boolean :guest, default: false
+      t.boolean :admin, default: false
       t.string :orcid
       t.timestamps
     end

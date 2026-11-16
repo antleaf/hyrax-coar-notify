@@ -10,6 +10,7 @@ module Hyrax
 
       enum :status, {
         "Sent" => "sent",
+        "Accepted" => "accept",
         "Tentatively Accepted" => "tentative_accept",
         "Announced Review" => "announce_review",
         "Announced Endorsement" => "announce_endorsement",
