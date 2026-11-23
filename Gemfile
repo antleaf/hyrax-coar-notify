@@ -4,7 +4,7 @@ source "https://rubygems.org"
 gem "rails", "~> 7.2.2", ">= 7.2.2.1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
-# Use postgresql as the database for Active Record
+# Use PostgreSQL as the database for Active Record
 gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
@@ -50,12 +50,15 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'i18n-tasks', '~> 1.0'
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "sqlite3"
+  gem "webmock"
 end
 gem "hyrax", "5.2.0"
 
@@ -63,9 +66,9 @@ group :development, :test do
   gem "solr_wrapper", ">= 0.3"
 end
 gem "rsolr", ">= 1.0", "< 3"
+gem "sassc-rails", "~> 2.1"
 gem "bootstrap", "~> 4.0"
 gem "twitter-typeahead-rails", "0.11.1.pre.corejavascript"
-gem "sassc-rails", "~> 2.1"
 gem "jquery-rails"
 gem "devise"
 gem "devise-guests", "~> 0.8"

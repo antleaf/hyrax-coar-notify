@@ -4,7 +4,11 @@ class CreateNotifyServices < ActiveRecord::Migration[7.2]
       t.string :title
       t.string :service_url
       t.string :api_key
-      t.string :origin_uris, array: true, default: []
+      if connection.adapter_name.downcase.include?('postgres')
+        t.string :origin_uris, array: true, default: []
+      else
+        t.text :origin_uris
+      end
       t.boolean :status
 
       t.timestamps
