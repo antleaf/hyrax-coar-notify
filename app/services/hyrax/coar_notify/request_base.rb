@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'ipaddr'
+require 'uri'
+
 module Hyrax
   module CoarNotify
     # Shared implementation for RequestEndorsement and RequestReview: builds a COAR Notify
@@ -16,6 +19,9 @@ module Hyrax
       ].freeze
 
       class MissingFileSetError < StandardError; end
+      class NonPublicOriginError < StandardError; end
+
+      LOCAL_HOST_SUFFIXES = %w[.localhost .local].freeze
 
       def initialize(work:, target:, user:)
         @work = work
@@ -25,6 +31,8 @@ module Hyrax
 
       def call
         return if duplicate_request?
+
+        ensure_public_origin!
 
         request_payload = build_payload
         pretty_generated_payload = JSON.pretty_generate(request_payload.as_json)
@@ -50,9 +58,12 @@ module Hyrax
         )
 
         notify_success(response)
+      rescue Faraday::TimeoutError
+        notify_timeout
       rescue Faraday::ConnectionFailed => e
-        notify_failure(e.message)
-      rescue MissingFileSetError => e
+        # Faraday reports a connect timeout (Net::OpenTimeout) as ConnectionFailed, not TimeoutError.
+        timeout_error?(e) ? notify_timeout : notify_failure(e.message)
+      rescue MissingFileSetError, NonPublicOriginError => e
         notify_failure(e.message)
       rescue defined?(Coarnotify::ValidationError) ? Coarnotify::ValidationError : StandardError => e
         notify_failure(e.respond_to?(:errors) ? format_validation_errors(e) : e.message)
@@ -66,6 +77,52 @@ module Hyrax
       end
 
       private
+
+      # The target service resolves the URLs in the payload (and replies to origin.inbox), so a
+      # localhost/private address makes it hang or fail. Refuse to send rather than post a request
+      # that cannot succeed.
+      def ensure_public_origin!
+        return if Hyrax::CoarNotify.config.allow_local_origin
+
+        bad = { "APPLICATION_URL" => repository_url, "origin inbox URL" => origin_inbox_url }
+              .reject { |_label, url| public_url?(url) }
+        return if bad.empty?
+
+        raise NonPublicOriginError, I18n.t(
+          "#{i18n_scope}.non_public_origin",
+          urls: bad.map { |label, url| "#{label} (#{url.presence || 'blank'})" }.join(", "),
+          default: "Cannot send the request: #{bad.map { |label, url| "#{label} (#{url.presence || 'blank'})" }.join(', ')} " \
+                   "is not publicly reachable, so #{target.title} could not use it. " \
+                   "Set a public URL, or enable allow_local_origin for local development."
+        )
+      end
+
+      def public_url?(url)
+        host = URI.parse(url.to_s).host.to_s.downcase.delete_prefix("[").delete_suffix("]")
+        return false if host.empty? || host == "localhost" || host.end_with?(*LOCAL_HOST_SUFFIXES)
+
+        ip = begin
+          IPAddr.new(host)
+        rescue IPAddr::Error
+          return true # a regular hostname
+        end
+        !(ip.loopback? || ip.private? || ip.link_local? || ip.to_i.zero?)
+      rescue URI::InvalidURIError
+        false
+      end
+
+      # Not retried by the job: the target may have processed the request even though it was slow to
+      # answer, and nothing is recorded as sent, so the user can simply try again.
+      def notify_timeout
+        notify_failure(
+          I18n.t("#{i18n_scope}.timeout", target: target.title,
+                                          default: "#{target.title} did not respond in time. Please try again later.")
+        )
+      end
+
+      def timeout_error?(error)
+        [error, error.cause, error.wrapped_exception].compact.any? { |e| e.is_a?(Timeout::Error) }
+      end
 
       def request_type
         self.class::REQUEST_TYPE
@@ -96,7 +153,7 @@ module Hyrax
             "id": work_url,
             "ietf:cite-as": work_doi || work_url,
             "ietf:item": ietf_item,
-            "type": %w[page sorg:AboutPage]
+            "type": %w[Page sorg:AboutPage]
           },
           "origin": {
             "id": repository_url,

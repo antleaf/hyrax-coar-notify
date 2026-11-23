@@ -42,7 +42,10 @@ RSpec.describe Hyrax::CoarNotify::RequestReview do
     allow(ENV).to receive(:fetch).with('APPLICATION_URL').and_return('https://repository.example.org')
 
     allow(Hyrax.query_service).to receive(:find_members).with(resource: work).and_return([file_set])
+    Hyrax::CoarNotify.config.inbox_url = 'https://repository.example.org/coar_notify_inbox/notifications'
   end
+
+  after { Hyrax::CoarNotify.reset_configuration! }
 
   describe '#call' do
     it 'posts a valid review request ActivityStreams payload' do

@@ -10,7 +10,8 @@ module Hyrax
                     :default_origin_inbox,
                     :fetch_schedule,
                     :manager_role,
-                    :inbox_username
+                    :inbox_username,
+                    :allow_local_origin
 
       def initialize
         @use_local = ENV.fetch('COAR_NOTIFY_USE_LOCAL', 'true') == 'true'
@@ -21,6 +22,10 @@ module Hyrax
         @fetch_schedule = '*/5 * * * *'
         @manager_role = ENV.fetch('NOTIFY_MANAGER_ROLE', 'admin')
         @inbox_username = ENV['COAR_NOTIFY_INBOX_USERNAME']
+        # When false (the default) a request is refused if this repository's own URLs point at
+        # localhost, a loopback or a private address, since the target service cannot reach them.
+        # Set COAR_NOTIFY_ALLOW_LOCAL_ORIGIN=true for development against a local inbox.
+        @allow_local_origin = ENV.fetch('COAR_NOTIFY_ALLOW_LOCAL_ORIGIN', 'false') == 'true'
       end
     end
   end
