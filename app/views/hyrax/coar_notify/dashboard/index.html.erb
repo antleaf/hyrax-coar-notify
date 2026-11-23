@@ -32,6 +32,7 @@
             <th><%= I18n.t('coar_notify.messages.origin') %></th>
             <th><%= I18n.t('coar_notify.messages.actor') %></th>
             <th><%= I18n.t('coar_notify.messages.work_id') %></th>
+            <th><%= I18n.t('coar_notify.messages.last_modified') %></th>
           </tr>
         </thead>
 
@@ -43,13 +44,21 @@
               <td><%= notification.status %></td>
               <td><%= ENV.fetch("APPLICATION_URL", "") %></td>
               <td><%= notification.user&.respond_to?(:display_name) ? notification.user.display_name : notification.user&.email %></td>
-              <td><%= notification.work_id %></td>
+              <td>
+                <% work_path = @work_paths && @work_paths[notification.work_id.to_s] %>
+                <% if work_path %>
+                  <%= link_to notification.work_id, work_path %>
+                <% else %>
+                  <%= notification.work_id %>
+                <% end %>
+              </td>
+              <td><%= l(notification.updated_at, format: :short) %></td>
             </tr>
           <% end %>
 
           <% if @notifications.blank? %>
             <tr>
-              <td colspan="6" class="text-center">
+              <td colspan="7" class="text-center">
                 <%= I18n.t('coar_notify.messages.no_messages') %>
               </td>
             </tr>
