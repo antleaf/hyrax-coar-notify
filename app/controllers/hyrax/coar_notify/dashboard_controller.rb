@@ -9,6 +9,7 @@ module Hyrax
         @notifications = NotifyRequest.with_notifications
                            .order(updated_at: :desc)
                            .limit(1000)
+        @work_paths = WorkPathResolver.call(@notifications.map(&:work_id), base_path: main_app.root_path)
       end
 
       def manage_connections

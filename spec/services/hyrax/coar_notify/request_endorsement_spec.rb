@@ -42,7 +42,10 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
     allow(ENV).to receive(:fetch).with('APPLICATION_URL').and_return('https://repository.example.org')
 
     allow(Hyrax.query_service).to receive(:find_members).with(resource: work).and_return([file_set])
+    Hyrax::CoarNotify.config.inbox_url = 'https://repository.example.org/coar_notify_inbox/notifications'
   end
+
+  after { Hyrax::CoarNotify.reset_configuration! }
 
   describe '#call' do
     it 'posts a valid COAR Notify ActivityStreams payload to the target inbox' do
@@ -63,6 +66,18 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
       expect(logged_request.work_id).to eq('work-dataset-456')
       expect(logged_request.request_type).to eq('request_endorsement')
       expect(logged_request.status).to eq('Sent')
+    end
+  end
+
+  describe 'the payload' do
+    it 'types the object as an ActivityStreams Page, as in the COAR Notify examples' do
+      stub = stub_request(:post, service.inbox_url)
+             .with { |req| JSON.parse(req.body).dig('object', 'type') == %w[Page sorg:AboutPage] }
+             .to_return(status: 201, body: '{}')
+
+      described_class.new(work: work, target: service, user: user).call
+
+      expect(stub).to have_been_requested
     end
   end
 
@@ -149,6 +164,85 @@ RSpec.describe Hyrax::CoarNotify::RequestEndorsement do
 
       expect { described_class.new(work: work, target: service, user: user).call }.to raise_error(NoMemoryError)
       expect(Hyrax::MessengerService).to have_received(:deliver).with(anything, anything, a_string_including('out of memory'), anything) if defined?(Hyrax::MessengerService)
+    end
+  end
+
+  describe '#call when this repository is not publicly reachable' do
+    let(:messages) { [] }
+
+    before do
+      allow(Hyrax::MessengerService).to receive(:deliver) { |_u, _r, message, _s| messages << message } if defined?(Hyrax::MessengerService)
+    end
+
+    def call_with_application_url(url)
+      allow(ENV).to receive(:fetch).with('APPLICATION_URL', anything).and_return(url)
+      allow(ENV).to receive(:fetch).with('APPLICATION_URL').and_return(url)
+      described_class.new(work: work, target: service, user: user).call
+    end
+
+    [
+      'http://localhost:3000', 'http://LOCALHOST', 'http://127.0.0.1:3000', 'http://127.5.5.5',
+      'http://[::1]:3000', 'http://0.0.0.0:3000', 'http://10.1.2.3', 'http://172.16.0.9',
+      'http://172.31.255.1', 'http://192.168.1.20:3000', 'http://169.254.10.10',
+      'http://myhost.local', 'http://app.localhost:3000', ''
+    ].each do |url|
+      it "refuses to send, tells the user and records nothing when APPLICATION_URL is #{url.inspect}" do
+        stub = stub_request(:post, service.inbox_url)
+        expect { call_with_application_url(url) }.not_to change(Hyrax::CoarNotify::NotifyRequest, :count)
+        expect(stub).not_to have_been_requested
+        expect(messages.join).to include('not publicly reachable').and include('APPLICATION_URL')
+      end
+    end
+
+    it 'refuses to send when only the origin inbox URL is local' do
+      Hyrax::CoarNotify.config.inbox_url = 'http://localhost:3001/coar_notify_inbox/notifications'
+      stub = stub_request(:post, service.inbox_url)
+      described_class.new(work: work, target: service, user: user).call
+      expect(stub).not_to have_been_requested
+      expect(messages.join).to include('origin inbox URL')
+    end
+
+    it 'sends normally for a public hostname or public IP address' do
+      %w[https://repository.example.org http://8.8.8.8 http://172.32.0.1 https://[2001:db8::1]].each do |url|
+        Hyrax::CoarNotify::NotifyRequest.delete_all
+        stub = stub_request(:post, service.inbox_url).to_return(status: 201, body: '{}')
+        call_with_application_url(url)
+        expect(stub).to have_been_requested.at_least_once
+      end
+    end
+
+    it 'sends to a local origin when allow_local_origin is enabled' do
+      Hyrax::CoarNotify.config.allow_local_origin = true
+      Hyrax::CoarNotify.config.inbox_url = 'http://localhost:3001/coar_notify_inbox/notifications'
+      stub = stub_request(:post, service.inbox_url).to_return(status: 201, body: '{}')
+      call_with_application_url('http://localhost:3000')
+      expect(stub).to have_been_requested
+      expect(Hyrax::CoarNotify::NotifyRequest.last.status).to eq('Sent')
+    end
+  end
+
+  describe '#call when the target does not respond in time' do
+    let(:messages) { [] }
+
+    before do
+      allow(Hyrax::MessengerService).to receive(:deliver) { |_u, _r, message, _s| messages << message } if defined?(Hyrax::MessengerService)
+      stub_request(:post, service.inbox_url).to_timeout
+    end
+
+    it 'tells the user the service did not respond in time, without raising or a stack trace' do
+      expect { described_class.new(work: work, target: service, user: user).call }.not_to raise_error
+      expect(messages.join).to include('did not respond in time').and include(service.title)
+    end
+
+    it 'gives the same message when the connection was made but the response timed out' do
+      stub_request(:post, service.inbox_url).to_raise(Net::ReadTimeout)
+      expect { described_class.new(work: work, target: service, user: user).call }.not_to raise_error
+      expect(messages.join).to include('did not respond in time')
+    end
+
+    it 'records no NotifyRequest, so the request can be tried again' do
+      expect { described_class.new(work: work, target: service, user: user).call }
+        .not_to change(Hyrax::CoarNotify::NotifyRequest, :count)
     end
   end
 end

@@ -51,8 +51,9 @@ The gem reads these (all optional; step 8 shows how each maps to an initializer 
 | `COAR_NOTIFY_ADMIN_API_TOKEN` | Bearer token for the inbox's admin API |
 | `COAR_NOTIFY_DEFAULT_ORIGIN_INBOX` | Default origin inbox URL sent with outgoing requests |
 | `COAR_NOTIFY_INBOX_USERNAME` | Sent when registering a consumer; only effective with an inbox admin token |
+| `COAR_NOTIFY_ALLOW_LOCAL_ORIGIN` | Set to `true` to let requests be sent while `APPLICATION_URL` or the origin inbox URL is `localhost`, a loopback or a private address. Default `false`: such requests are refused with a message, because the target service cannot reach those URLs. Development only. |
 | `NOTIFY_MANAGER_ROLE` | Role allowed to manage Notify connections (default `admin`) |
-| `APPLICATION_URL` | Public URL of your app, without a trailing slash; used to build the work URLs sent in requests (default `http://localhost:3000`) |
+| `APPLICATION_URL` | Public URL of your app, without a trailing slash; used to build the work URLs sent in requests (default `http://localhost:3000`, which is refused for real requests unless `allow_local_origin` is enabled) |
 
 ## 3. Run the install generator
 
@@ -193,6 +194,7 @@ notifications" section.
 | `fetch_schedule` | `*/5 * * * *` | Cron schedule for `FetchNotificationsJob` (see the README's "Fetching notifications" section) |
 | `manager_role` | `admin` (`ENV["NOTIFY_MANAGER_ROLE"]`) | Role name that grants access to the Notify dashboard and connection management (see the README's "Access control" section) |
 | `inbox_username` | `ENV["COAR_NOTIFY_INBOX_USERNAME"]` | Optional; sent when registering a consumer, effective only when `admin_api_token` authenticates as an inbox admin |
+| `allow_local_origin` | `ENV["COAR_NOTIFY_ALLOW_LOCAL_ORIGIN"] == "true"` (default `false`) | When false, endorsement/review requests are refused if `APPLICATION_URL` or the origin inbox URL is not publicly reachable (localhost, loopback, private ranges, `.local`) |
 
 ## Rake tasks
 

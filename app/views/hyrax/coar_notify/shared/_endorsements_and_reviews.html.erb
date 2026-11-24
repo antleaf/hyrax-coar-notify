@@ -1,6 +1,24 @@
 <% presenter ||= @presenter %>
 <% endorsements = presenter.respond_to?(:parsed_endorsements) ? presenter.parsed_endorsements : (presenter.respond_to?(:endorsements) ? presenter.endorsements : []) %>
 <% reviews = presenter.respond_to?(:parsed_reviews) ? presenter.parsed_reviews : (presenter.respond_to?(:reviews) ? presenter.reviews : []) %>
+<%
+  # An entry is a Hash, or a JSON string holding one; anything else is shown as an empty entry.
+  entry_data = lambda do |entry|
+    data = entry.is_a?(String) ? (JSON.parse(entry) rescue nil) : entry
+    data.respond_to?(:with_indifferent_access) ? data.with_indifferent_access : {}
+  end
+  # These URLs come from remote inboxes, so only http(s) ones are made clickable. Anything else
+  # (javascript:, data:, a bare string) is shown as plain, escaped text.
+  linkable = lambda do |url|
+    uri = URI.parse(url.to_s.strip)
+    uri.is_a?(URI::HTTP) && uri.host.present?
+  rescue URI::InvalidURIError
+    false
+  end
+  url_or_text = lambda do |url|
+    linkable.call(url) ? link_to(url.to_s.strip, url.to_s.strip, target: "_blank", rel: "noopener noreferrer") : url.to_s
+  end
+%>
 
 <% if endorsements.any? || reviews.any? %>
   <div class="card mb-4 coar-notify-endorsements-reviews">
@@ -11,12 +29,12 @@
       <% if endorsements.any? %>
         <h4 class="h5 mb-3"><%= t('coar_notify.endorsements', default: 'Endorsements') %></h4>
         <% endorsements.each do |endorsement| %>
-          <% end_data = endorsement.is_a?(String) ? (JSON.parse(endorsement) rescue {}) : endorsement %>
+          <% end_data = entry_data.call(endorsement) %>
           <div class="card mb-2 bg-light">
             <div class="card-body py-2">
-              <p class="mb-1"><strong>Service Provider:</strong> <%= end_data["service_provider"] || end_data[:service_provider] %></p>
-              <% if (end_data["endorsement_url"] || end_data[:endorsement_url]).present? %>
-                <p class="mb-0"><strong>Endorsement URL:</strong> <%= link_to (end_data["endorsement_url"] || end_data[:endorsement_url]), (end_data["endorsement_url"] || end_data[:endorsement_url]), target: "_blank", rel: "noopener noreferrer" %></p>
+              <p class="mb-1"><strong>Service Provider:</strong> <%= end_data[:service_provider] %></p>
+              <% if end_data[:endorsement_url].present? %>
+                <p class="mb-0"><strong>Endorsement URL:</strong> <%= url_or_text.call(end_data[:endorsement_url]) %></p>
               <% end %>
             </div>
           </div>
@@ -26,12 +44,12 @@
       <% if reviews.any? %>
         <h4 class="h5 mb-3 mt-3"><%= t('coar_notify.reviews', default: 'Reviews') %></h4>
         <% reviews.each do |review| %>
-          <% rev_data = review.is_a?(String) ? (JSON.parse(review) rescue {}) : review %>
+          <% rev_data = entry_data.call(review) %>
           <div class="card mb-2 bg-light">
             <div class="card-body py-2">
-              <p class="mb-1"><strong>Service Provider:</strong> <%= rev_data["service_provider"] || rev_data[:service_provider] %></p>
-              <% if (rev_data["review_url"] || rev_data[:review_url]).present? %>
-                <p class="mb-0"><strong>Review URL:</strong> <%= link_to (rev_data["review_url"] || rev_data[:review_url]), (rev_data["review_url"] || rev_data[:review_url]), target: "_blank", rel: "noopener noreferrer" %></p>
+              <p class="mb-1"><strong>Service Provider:</strong> <%= rev_data[:service_provider] %></p>
+              <% if rev_data[:review_url].present? %>
+                <p class="mb-0"><strong>Review URL:</strong> <%= url_or_text.call(rev_data[:review_url]) %></p>
               <% end %>
             </div>
           </div>
